@@ -1,3 +1,3 @@
 <?php
-include_once("/System/default.php");
+include_once("System/default.php");
 ?>

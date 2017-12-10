@@ -1,5 +1,5 @@
 <?php
 
-include("/Styling/index.html");
+include("Styling/index.html");
 
 ?>
