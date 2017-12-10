@@ -1,6 +1,6 @@
 <?php
 
-include_once("settings.php");
+include_once("config.php");
 include_once("System/objects.php");
 include_once("System/Database/data.php");
 
