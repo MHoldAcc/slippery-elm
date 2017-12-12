@@ -48,4 +48,12 @@ function elm_Data_GetRoleId($roleName){
     return 1;
 }
 
+/**
+ *
+ *
+ */
+function elm_Data_login_User($userName, $password){
+    //Check if User exists and is using right password
+    return true;
+}
 ?>

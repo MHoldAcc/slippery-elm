@@ -7,7 +7,7 @@
  */
 ?>
 
-<form action="index.php" method="post">
+<form action="system/login.php" method="post">
     Username: <input type="text" name="username" /><br />
 			Passwort: <input type="password" name="password" /><br />
 		<input type="submit" value="Anmelden" />
