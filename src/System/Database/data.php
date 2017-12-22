@@ -4,7 +4,8 @@
  * Creates database tables and base data on first installation
  */
 function elm_Data_InitializeDb(){
-
+    $filename = "MariaDB/slippery_elm.sql";
+    ExecSqlFile($filename);
 }
 
 /**
@@ -12,7 +13,13 @@ function elm_Data_InitializeDb(){
  * @return bool True if Db got created
  */
 function elm_Data_GetIsDbInitialized(){
-    return false;
+    $sql = mysqli_query($conn, "SELECT * FROM `elm_version`;");
+    if ($sql){
+        $initialized = true;
+    } else {
+        $initialized = false;
+    }
+    return $initialized;
 }
 
 /**
@@ -45,6 +52,7 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId)
  * @return int RoleId
  */
 function elm_Data_GetRoleId($roleName){
+    //enter rolename return id
     return 1;
 }
 
@@ -53,7 +61,22 @@ function elm_Data_GetRoleId($roleName){
  *
  */
 function elm_Data_login_User($userName, $password){
-    //Check if User exists and is using right password
+    //Check if User exists and is using right password Login function
     return true;
+}
+
+function ExecSqlFile($filename) {
+    if (!file_exists($filename)) {
+        return false;
+    }
+    $array = array();
+    $querys = explode("\n", file_get_contents($filename));
+    foreach ($querys as $q) {
+        $q = trim($q);
+        if (strlen($q)) {
+            mysqli_query($conn, $q) or die(mysqli_error($conn));
+        }
+    }
+    return $array;
 }
 ?>
