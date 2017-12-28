@@ -112,6 +112,7 @@ CREATE TABLE `elm_setting` (
 CREATE TABLE `elm_users` (
   `usersID` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `isActive` tinyint(1) NOT NULL,
   `usersCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
