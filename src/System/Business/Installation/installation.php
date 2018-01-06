@@ -24,7 +24,7 @@ if($elm_Installation_UserGotCreated) {
     header("Refresh:0");
 }
 else {
-    include_once("System/Installation/adminCreation.html");
+    include_once("System/UI/HTML/adminCreation.html");
 }
 
 ?>
