@@ -111,5 +111,10 @@ function initializeMariaDB(){
               ADD CONSTRAINT `elm_role_pages_ibfk_2` FOREIGN KEY (`pages_FK`) REFERENCES `elm_pages` (`pagesID`) ON DELETE CASCADE ON UPDATE CASCADE;
             
             ALTER TABLE `elm_users` ADD CONSTRAINT `elm_users_ibfk_1` FOREIGN KEY (`role_FK`) REFERENCES `elm_role` (`roleID`) ON DELETE CASCADE ON UPDATE CASCADE;";
-    $conn->query($sql);
+    //$res = $conn->query($sql);
+    if ($conn->query($sql) === TRUE) {
+        echo "Database created successfully";
+    } else {
+        echo "Error creating database: " . $conn->error;
+    }
 }
