@@ -23,7 +23,7 @@ if(elm_Data_GetIsDbInitialized()){
     $sql = "SHOW DATABASES";
     $res = $conn->query($sql);
     while ($row = $res->fetch_assoc()){
-        print_r($row);
+        //print_r($row);
     }
 }
 
