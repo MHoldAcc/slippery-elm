@@ -5,7 +5,10 @@ include_once("System/objects.php");
 include_once("System/Database/data.php");
 
 //Check if installation was already done
-if(elm_Data_GetIsDbInitialized() || count(elm_Data_GetUsers()) === 0){
+if(elm_Data_GetIsDbInitialized()){
+    include_once("System/Installation/installation.php");
+}
+else if (count(elm_Data_GetUsers()) === 0){
     include_once("System/Installation/installation.php");
 }
 else{
