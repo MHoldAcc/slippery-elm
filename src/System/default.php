@@ -13,5 +13,6 @@ else if (count(elm_Data_GetUsers()) === 0){
 }
 else{
     include_once("System/UI/loadPage.php");
+    elm_Page_Load();
 }
 ?>
