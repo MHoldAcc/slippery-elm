@@ -22,8 +22,7 @@ function elm_Data_InitializeDb(){
 function elm_Data_GetIsDbInitialized(){
     GLOBAL $conn;
     $sql = "SELECT * FROM `elm_version`;";
-    $sql = $conn->query($sql);
-    if ($sql){
+    if ($conn->query($sql)){
         $initialized = true;
     } else {
         $initialized = false;
@@ -55,11 +54,13 @@ function elm_Data_GetUsers(){
     GLOBAL $conn;
     $elmUsers = array();
     $sql = "SELECT * FROM `elm_users` WHERE `isActive` = 1;";
-    if($conn->query($sql)){
-        while ($row = $conn->fetch_assoc()){
+    $res = $conn->query($sql);
+    if($res){
+        while ($row = $res->fetch_assoc()){
             array_push($elmUsers, $row);
         }
     }
+    //print_r($elmUsers);
     return $elmUsers;
 }
 
