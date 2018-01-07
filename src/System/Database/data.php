@@ -131,7 +131,7 @@ function elm_Data_login_User($userName, $password, $verify){
         $password = $conn->real_escape_string($password);
         $password = hash('sha512', $password);
         // SQL query to fetch information of registered users and finds user match.
-        $stmt = "SELECT * FROM users WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
+        $stmt = "SELECT * FROM `elm_users` WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
         $res = $conn->query($stmt);
         $rows = $res->num_rows;
         if ($rows == 1) {
