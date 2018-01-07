@@ -20,8 +20,9 @@ function elm_Data_InitializeDb(){
  * @return bool True if Db got created
  */
 function elm_Data_GetIsDbInitialized(){
-    $conn = new mysqli("localhost", "root", "");
-    $sql = $conn->query("SELECT * FROM `elm_version`;");
+    GLOBAL $conn;
+    $sql = "SELECT * FROM `elm_version`;";
+    $sql = $conn->query($sql);
     if ($sql){
         $initialized = true;
     } else {
@@ -56,15 +57,12 @@ function elm_Data_GetUsers(){
     GLOBAL $conn;
     $elmUsers = array();
     $sql = "SELECT * FROM `elm_users` WHERE `isActive` = 1;";
-    if ($sql){
-        $result = $conn->query($sql);
-        if($result){
-            while ($row = $result->fetch_assoc()){
-                array_push($elmUsers, $row);
-            }
+    $result = $conn->query($sql);
+    if($result){
+        while ($row = $result->fetch_assoc()){
+            array_push($elmUsers, $row);
         }
     }
-    $conn->close();
 
     return $elmUsers;
 }
@@ -167,26 +165,61 @@ function ExecSqlFile($filename) {
     }
     return $array;
 }
-function createPage(){
-
-}
-
-function adminUpdatePage($pageID, $pageTitle, $content){
-
-}
 /**
  * CREATE TABLE `elm_pages` (
-              `pagesID` int(11) NOT NULL,
-              `pagesName` varchar(255) NOT NULL,
-              `pagesContent` text,
-              `pagesParentPage` varchar(255),
-              `pagesKeywords` varchar(255) NOT NULL,
-              `pagesSorting` int(11) NOT NULL,
-              `pagesCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              `pagesModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              `pagesCreaterID` int(11) NOT NULL,
-              `pagesModifierID` int(11) NOT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ * `pagesID` int(11) NOT NULL,
+ * `pagesName` varchar(255) NOT NULL,
+ * `pagesContent` text,
+ * `pagesParentPage` varchar(255),
+ * `pagesKeywords` varchar(255) NOT NULL,
+ * `pagesSorting` int(11) NOT NULL,
+ * `pagesCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesCreaterID` int(11) NOT NULL,
+ * `pagesModifierID` int(11) NOT NULL
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
+function createPage($title, $content, $parentPage, $keywords, $sorting){
+    GLOBAL $conn;
+    $sql = "INSERT INTO `elm_pages` (`pagesName`, `pagesContent`, `pagesParentPage`, `pagesKeywords`, `pagesSorting`) 
+            VALUES 
+            ('".$title."', '".$content."', '".$parentPage."', '".$keywords."', ".$sorting.");";
+    $conn->query($sql);
+}
+
+/**
+ * CREATE TABLE `elm_pages` (
+ * `pagesID` int(11) NOT NULL,
+ * `pagesName` varchar(255) NOT NULL,
+ * `pagesContent` text,
+ * `pagesParentPage` varchar(255),
+ * `pagesKeywords` varchar(255) NOT NULL,
+ * `pagesSorting` int(11) NOT NULL,
+ * `pagesCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesCreaterID` int(11) NOT NULL,
+ * `pagesModifierID` int(11) NOT NULL
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
+function adminUpdatePage($pageID, $title, $content, $keywords, $sorting){
+    GLOBAL $conn;
+    $sql = "UPDATE `elm_pages` SET `pagesName` = ".$title.",`pagesContent` = ".$content.", `pagesKeywords` = ".$keywords.", `pagesSorting` = ".$sorting." WHERE `pagesID` = ".$pageID.";";
+    $conn->query($sql);
+}
+
+/**
+ * CREATE TABLE `elm_pages` (
+ * `pagesID` int(11) NOT NULL,
+ * `pagesName` varchar(255) NOT NULL,
+ * `pagesContent` text,
+ * `pagesParentPage` varchar(255),
+ * `pagesKeywords` varchar(255) NOT NULL,
+ * `pagesSorting` int(11) NOT NULL,
+ * `pagesCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesCreaterID` int(11) NOT NULL,
+ * `pagesModifierID` int(11) NOT NULL
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 function updatePageContent($pageID, $content){
     GLOBAL $conn;
