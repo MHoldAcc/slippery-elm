@@ -28,8 +28,6 @@ function elm_Data_GetIsDbInitialized(){
     } else {
         $initialized = false;
     }
-    $conn->close();
-
     return $initialized;
 }
 
@@ -57,13 +55,11 @@ function elm_Data_GetUsers(){
     GLOBAL $conn;
     $elmUsers = array();
     $sql = "SELECT * FROM `elm_users` WHERE `isActive` = 1;";
-    $result = $conn->query($sql);
-    if($result){
-        while ($row = $result->fetch_assoc()){
+    if($conn->query($sql)){
+        while ($row = $conn->fetch_assoc()){
             array_push($elmUsers, $row);
         }
     }
-
     return $elmUsers;
 }
 
@@ -96,7 +92,7 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
     $name = stripslashes($name);
     $password = stripslashes($password);
     $password = $conn->real_escape_string($password);
-    $password=hash('sha512', $password);
+    $password = hash('sha512', $password);
     $stmt = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) VALUES ('".$name."', '".$password."', '".$mail."',1,'".$roleId."')";
     $query = $conn->query($stmt);
     if ($query){
@@ -119,8 +115,6 @@ function elm_Data_GetRoleId($roleName){
         $rows = $res->fetch_row();
         $id = $rows[0];
     }
-    $conn->close();
-
     return $id;
 }
 
