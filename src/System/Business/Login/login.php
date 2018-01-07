@@ -1,25 +1,28 @@
 <?php
 
-session_start();
-
-if(isset($_POST['username'])){
-    $elm_username = $_POST['username'];
-
-    $query = "select * from `elm_users` where username='".$elm_username."'";
-
-    $result = mysqli_query($conn,$query);
-    if($result == null){
-        return false;
+function elm_Login_Login($userName, $password, $verify){
+    if(isset($userName) && isset($password) && isset($verify)){
+        elm_Data_login_User($userName, $password, $verify);
+        header("Location: ../index.php");
+    }
+    else{
+        //Login failed
     }
 
-    while($row = mysqli_fetch_array($result)){
-        if($row['password'] == md5($_POST['password'])){
-            $_SESSION['loggedIn'] = "true";
-            header('Location: ../index.php');
-        }else{
-            header('Location: ../index.php');
-            echo "Loggin fail";
-        }
-    }
 }
+
+function elm_Login_Logout(){
+    session_start();
+    session_unset();
+    session_destroy();
+    header("Location: ../index.php");
+}
+
+function elm_Login_IsLoggedIn(){
+    if(isset($_SESSION['login_user']) && isset($_SESSION['login_failure']) && $_SESSION['login_failure'] == 'false')
+        return true;
+    else
+        return false;
+}
+
 ?>
