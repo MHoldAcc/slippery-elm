@@ -132,7 +132,7 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
  * @return int RoleId
  */
 function elm_Data_GetRoleId($roleName){
-    $conn = new mysqli("localhost", "root", "");
+    GLOBAL $conn;
     $id = "";
     $sql = "SELECT `roleID` FROM `elm_role` WHERE `roleName` LIKE '.$roleName.'";
     $res = $conn->query($sql);
