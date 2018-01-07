@@ -60,7 +60,6 @@ function elm_Data_GetUsers(){
             array_push($elmUsers, $row);
         }
     }
-    //print_r($elmUsers);
     return $elmUsers;
 }
 
@@ -134,7 +133,7 @@ function elm_Data_login_User($userName, $password, $verify){
         // SQL query to fetch information of registered users and finds user match.
         $stmt = "SELECT * FROM users WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
         $res = $conn->query($stmt);
-        $rows = $conn->num_rows($res);
+        $rows = $res->num_rows;
         if ($rows == 1) {
             $_SESSION['login_user'] = $name; // Initializing Session
             $_SESSION['login_failure'] = 'false';
@@ -160,6 +159,7 @@ function ExecSqlFile($filename) {
     }
     return $array;
 }
+
 /**
  * CREATE TABLE `elm_pages` (
  * `pagesID` int(11) NOT NULL,
