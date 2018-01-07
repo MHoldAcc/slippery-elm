@@ -10,6 +10,9 @@ function elm_Page_Load(){
 
     $elm_Page_HTML = elm_Page_ReplacePlaceholder($elm_Page_HTML, "[elm_PageContent]", $elm_Page_Content);
 
+    $elm_Page_HTML = elm_Page_ReplacePlaceholder($elm_Page_HTML, "[elm_Login_Link]", "index.php?login");
+    $elm_Page_HTML = elm_Page_ReplacePlaceholder($elm_Page_HTML, "[elm_Login_Text]", "Anmelden");
+
     eval('?>'. $elm_Page_HTML . '<?php');
 }
 
