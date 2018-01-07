@@ -5,31 +5,12 @@
  */
 @session_start();
 include_once("config.php");
-//if(elm_Data_GetIsDbInitialized()){
-    $conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Settings_DbPassword, $elm_Settings_Db);
-    if ($conn->connect_error) {
-        die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
-    }
-    $sql = "SHOW DATABASES";
-    $res = $conn->query($sql);
-/*    while ($row = $res->fetch_assoc()){
-        print_r($row);
-    }
-/*} else {
-    $conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Settings_DbPassword);
-    if ($conn->connect_error) {
-        die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
-    }
-    $sql = "SHOW DATABASES";
-    $res = $conn->query($sql);
-    while ($row = $res->fetch_assoc()){
-        //print_r($row);
-    }
-}*/
+$conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Settings_DbPassword, $elm_Settings_Db);
+if ($conn->connect_error) {
+    die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
+}
 
 function elm_Data_InitializeDb(){
-    //$filename = "MariaDB/slippery_elm.sql";
-    //ExecSqlFile($filename);
     include_once"MariaDb/initializeMariaDB.php";
     initializeMariaDB();
 }
@@ -152,7 +133,6 @@ function elm_Data_login_User($userName, $password, $verify){
     //Check if User exists and is using right password Login function
     GLOBAL $conn;
     $name = $userName;
-    $password = $password;
     if ($verify === $password) {
         $name = stripslashes($name);
         $password = stripslashes($password);
@@ -186,5 +166,31 @@ function ExecSqlFile($filename) {
         }
     }
     return $array;
+}
+function createPage(){
+
+}
+
+function adminUpdatePage($pageID, $pageTitle, $content){
+
+}
+/**
+ * CREATE TABLE `elm_pages` (
+              `pagesID` int(11) NOT NULL,
+              `pagesName` varchar(255) NOT NULL,
+              `pagesContent` text,
+              `pagesParentPage` varchar(255),
+              `pagesKeywords` varchar(255) NOT NULL,
+              `pagesSorting` int(11) NOT NULL,
+              `pagesCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              `pagesModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              `pagesCreaterID` int(11) NOT NULL,
+              `pagesModifierID` int(11) NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
+function updatePageContent($pageID, $content){
+    GLOBAL $conn;
+    $sql = "UPDATE `elm_pages` SET `pagesContent` = ".$content." WHERE `pagesID` = ".$pageID.";";
+    $conn->query($sql);
 }
 ?>
