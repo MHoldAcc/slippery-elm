@@ -5,17 +5,17 @@
  */
 @session_start();
 include_once("config.php");
-if(elm_Data_GetIsDbInitialized()){
+//if(elm_Data_GetIsDbInitialized()){
     $conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Settings_DbPassword, $elm_Settings_Db);
     if ($conn->connect_error) {
         die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
     }
     $sql = "SHOW DATABASES";
     $res = $conn->query($sql);
-    while ($row = $res->fetch_assoc()){
+/*    while ($row = $res->fetch_assoc()){
         print_r($row);
     }
-} else {
+/*} else {
     $conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Settings_DbPassword);
     if ($conn->connect_error) {
         die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
@@ -25,7 +25,7 @@ if(elm_Data_GetIsDbInitialized()){
     while ($row = $res->fetch_assoc()){
         //print_r($row);
     }
-}
+}*/
 
 function elm_Data_InitializeDb(){
     //$filename = "MariaDB/slippery_elm.sql";
