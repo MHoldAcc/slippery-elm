@@ -11,10 +11,6 @@ function elm_Page_Load(){
 
     elm_Page_LoginFunctionality();
 
-    foreach (getPages() as $page) {
-        echo $page['pagesName'];
-    }
-
     elm_Page_ReplacePlaceholder("[elm_PageContent]", $elm_Page_Content);
 
     eval('?>'. $elm_Page_HTML . '<?php');
