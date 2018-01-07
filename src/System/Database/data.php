@@ -72,8 +72,7 @@ function elm_Data_GetIsDbInitialized(){
 function elm_Data_GetUsers(){
     //Use the class elm_User as return values
     //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
-    //Why???
-    $conn = new mysqli("localhost", "root", "");
+    GLOBAL $conn;
     $elmUsers = array();
     $sql = "SELECT * FROM `elm_users` WHERE `isActive` = 1;";
     if ($sql){
