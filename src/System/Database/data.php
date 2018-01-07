@@ -228,7 +228,7 @@ function getPages(){
     $sql = "SELECT * FROM `elm_pages`;";
     $res = $conn->query($sql);
     while ($row = $res->fetch_assoc()){
-        array_push($pages, $res);
+        array_push($pages, $row);
     }
     return $pages;
 }
