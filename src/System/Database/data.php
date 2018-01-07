@@ -222,14 +222,32 @@ function updatePageContent($pageID, $content){
     $conn->query($sql);
 }
 
-function getPages(){
+function elm_Data_GetPages(){
     GLOBAL $conn;
     $pages = array();
     $sql = "SELECT * FROM `elm_pages`;";
     $res = $conn->query($sql);
-    while ($row = $res->fetch_assoc()){
+    while ($row = $res->fetch_assoc()) {
         array_push($pages, $row);
     }
-    return $pages;
+
+    //Parses Page Objects
+    $pageObjects = array();
+    foreach ($pages as $page) {
+        $pageObject = new elm_Page();
+        $pageObject->id = $page['pagesID'];
+        $pageObject->name = $page['pagesName'];
+        $pageObject->content = $page['pagesContent'];
+        $pageObject->parentPage = $page['pagesParentPage'];
+        $pageObject->keywords = $page['pagesKeywords'];
+        $pageObject->sorting = $page['pagesSorting'];
+        $pageObject->created = $page['pagesCreated'];
+        $pageObject->modified = $page['pagesModified'];
+        $pageObject->creatorId = $page['pagesCreaterID'];
+        $pageObject->modifierId = $page['pagesModifierID'];
+        array_push($pageObjects, $pageObject);
+    }
+
+    return $pageObjects;
 }
 ?>
