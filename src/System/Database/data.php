@@ -221,4 +221,15 @@ function updatePageContent($pageID, $content){
     $sql = "UPDATE `elm_pages` SET `pagesContent` = ".$content." WHERE `pagesID` = ".$pageID.";";
     $conn->query($sql);
 }
+
+function getPages(){
+    GLOBAL $conn;
+    $pages = array();
+    $sql = "SELECT * FROM `elm_pages`;";
+    $res = $conn->query($sql);
+    while ($row = $res->fetch_assoc()){
+        array_push($pages, $res);
+    }
+    return $pages;
+}
 ?>
