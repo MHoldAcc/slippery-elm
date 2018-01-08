@@ -5,7 +5,6 @@ function elm_Page_Load(){
     @session_start();
 
     global  $elm_Page_HTML;
-    global $elm_Page_Content;
     global $elm_Page_CurrentPage;
 
     elm_Page_GetCurrentPageId();
@@ -21,7 +20,7 @@ function elm_Page_Load(){
 
     elm_Page_LoginFunctionality();
 
-    elm_Page_ReplacePlaceholder("[elm_PageContent]", $elm_Page_CurrentPage->content);
+    elm_Page_ReplaceAllPlaceholders();
 
     eval('?>'. $elm_Page_HTML . '<?php');
 }
@@ -58,22 +57,21 @@ function elm_Page_LoginFunctionality(){
 }
 
 function elm_Page_CreateMenu(){
+    global $elm_Page_NavBar;
     $menuContent = '';
     foreach (elm_Page_GetAllPages() as $page){
         $menuContent = $menuContent . '<a href="index.php?page='. $page->id . '"';
         if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
             $menuContent = $menuContent . 'class="active"';
-            elm_Page_SetPageContent($page);
+            elm_Page_SetCurrentPage($page);
         }
         $menuContent = $menuContent . '>'. $page->name .'</a>';
     }
-    elm_Page_ReplacePlaceholder("[elm_PageNav]", $menuContent);
+    $elm_Page_NavBar = $menuContent;
 }
 
-function elm_Page_SetPageContent($page){
-    global $elm_Page_Content;
+function elm_Page_SetCurrentPage($page){
     global $elm_Page_CurrentPage;
-    $elm_Page_Content = $page->content;
     $elm_Page_CurrentPage = $page;
 }
 
@@ -112,6 +110,15 @@ function elm_Page_GetCurrentPageId(){
     }
     else
         $_SESSION['elm_Pages_CurrentPageId'] = 0;
+}
+
+function elm_Page_ReplaceAllPlaceholders(){
+    global $elm_Page_CurrentPage;
+    global $elm_Page_NavBar;
+    elm_Page_ReplacePlaceholder("[elm_Page_Content]", $elm_Page_CurrentPage->content);
+    elm_Page_ReplacePlaceholder("[elm_Page_NavBar]", $elm_Page_NavBar);
+    elm_Page_ReplacePlaceholder("[elm_Page_Id]", $elm_Page_CurrentPage->id);
+    elm_Page_ReplacePlaceholder("[elm_Page_Name]", $elm_Page_CurrentPage->name);
 }
 
 ?>
