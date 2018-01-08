@@ -78,23 +78,33 @@ function elm_Page_SetCurrentPage($page){
 function elm_Page_GetAllPages(){
     $pages = elm_Data_GetPages();
 
-    //Adds Admin Page
-    $adminpage = new elm_Page();
-    $adminpage -> id = 'elm_Admin';
-    $adminpage -> content = file_get_contents('System/UI/HTML/adminPage.html', FILE_USE_INCLUDE_PATH);
-    $adminpage -> name = 'Admin';
-    $adminpage -> sorting = 9900;
-    array_push($pages, $adminpage);
+    if(elm_Login_IsLoggedIn()){
+        //Adds Admin Page
+        $adminpage = new elm_Page();
+        $adminpage -> id = 'elm_Admin';
+        $adminpage -> content = file_get_contents('System/UI/HTML/adminPage.html', FILE_USE_INCLUDE_PATH);
+        $adminpage -> name = 'Admin';
+        $adminpage -> sorting = 9900;
+        array_push($pages, $adminpage);
 
-    //Adds Edit Page
-    $editPage = new elm_Page();
-    $editPage -> id = 'elm_Page_Edit';
-    $editPage -> content = file_get_contents('System/UI/HTML/editPage.html', FILE_USE_INCLUDE_PATH);
-    $editPage -> name = 'Seite bearbeiten';
-    $editPage -> parentPage = 'elm_Admin';
-    $editPage -> sorting = 9930;
-    array_push($pages, $editPage);
+        //Adds Edit Page
+        $editPage = new elm_Page();
+        $editPage -> id = 'elm_Page_Edit';
+        $editPage -> content = file_get_contents('System/UI/HTML/editPage.html', FILE_USE_INCLUDE_PATH);
+        $editPage -> name = 'Seite bearbeiten';
+        $editPage -> parentPage = 'elm_Admin';
+        $editPage -> sorting = 9930;
+        array_push($pages, $editPage);
 
+        //User edit Page
+        $userPage = new elm_Page();
+        $userPage -> id = 'elm_User_Edit';
+        $userPage -> content = file_get_contents('System/UI/HTML/user.html', FILE_USE_INCLUDE_PATH);
+        $userPage -> name = 'Benutzer';
+        $userPage -> sorting = 9800;
+        array_push($pages, $userPage);
+    }
+    
     //Orders Array
     usort($pages, function ($a, $b){return strcmp($a->sorting, $b->sorting);});
 
