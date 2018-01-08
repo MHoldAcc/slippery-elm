@@ -120,13 +120,13 @@ function initializeMariaDB(){
                                                                               MODIFY `pagesID` int(11) NOT NULL AUTO_INCREMENT;";
                                                                 if ($conn->query($sql) === TRUE) {
                                                                     echo "successfully altered elm_users";
-                                                                    $sql = "ALTER TABLE `elm_role_pages`
-                                                                      ADD CONSTRAINT `elm_role_pages_ibfk_1` FOREIGN KEY (`role_FK`) REFERENCES `elm_role` (`roleID`) ON DELETE CASCADE ON UPDATE CASCADE,
-                                                                      ADD CONSTRAINT `elm_role_pages_ibfk_2` FOREIGN KEY (`pages_FK`) REFERENCES `elm_pages` (`pagesID`) ON DELETE CASCADE ON UPDATE CASCADE;";
+                                                                    $sql = "ALTER TABLE `elm_role`
+                                                                                  MODIFY `roleID` int(11) NOT NULL AUTO_INCREMENT;";
                                                                     if ($conn->query($sql) === TRUE) {
                                                                         echo "successfully altered elm_pages";
-                                                                        $sql = "ALTER TABLE `elm_role`
-                                                                                  MODIFY `roleID` int(11) NOT NULL AUTO_INCREMENT;";
+                                                                        $sql = "ALTER TABLE `elm_role_pages`
+                                                                                  ADD CONSTRAINT `elm_role_pages_ibfk_1` FOREIGN KEY (`role_FK`) REFERENCES `elm_role` (`roleID`) ON DELETE CASCADE ON UPDATE CASCADE,
+                                                                                  ADD CONSTRAINT `elm_role_pages_ibfk_2` FOREIGN KEY (`pages_FK`) REFERENCES `elm_pages` (`pagesID`) ON DELETE CASCADE ON UPDATE CASCADE;";
                                                                         if ($conn->query($sql) === TRUE) {
                                                                             echo "successfully altered elm_role";
                                                                             $sql = "ALTER TABLE `elm_setting`
