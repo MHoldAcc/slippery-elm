@@ -273,17 +273,18 @@ function elm_Data_GetPages(){
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  *
  */
-function updateUser($name, $pass, $mail){
+function updateUser($id, $name, $pass, $mail){
     GLOBAL $conn;
     $sql = "UPDATE `elm_users` 
-              SET `username` = ".$name.", `password` = ".$pass.", `email` = ".$mail.";";
+              SET `username` = ".$name.", `password` = ".$pass.", `email` = ".$mail."
+              WHERE `usersID` = ".$id.";";
     $conn->query($sql);
 }
 
-function deleteUser($name){
+function deleteUser($id){
     GLOBAL $conn;
     $sql = "DELETE FROM `elm_users`
-              WHERE `username` = ".$name.";";
+              WHERE `username` = ".$id.";";
     $conn->query($sql);
 }
 
