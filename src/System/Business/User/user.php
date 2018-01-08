@@ -8,13 +8,10 @@ if(isset($_POST['elm_EditUser_Execute'])){
 function elm_User_EditValues($userName, $password, $mail){
     if(isset($userName) && isset($password) && isset($mail)){
         elm_Data_UpdateUser($_SESSION['login_user_id'], $userName, $password, $mail);
-
-        echo $_SESSION['login_user_id'] . ';' . $userName. ';'. $password . ';' . $mail;
-
-        //header("Location: index.php");
+        header("Location: index.php?logout");
     }
     else{
-        //Login failed
+        //Update failed
     }
 
 }

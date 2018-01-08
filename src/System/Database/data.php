@@ -277,8 +277,15 @@ function elm_Data_GetPages(){
  */
 function elm_Data_UpdateUser($id, $name, $pass, $mail){
     GLOBAL $conn;
+
+    $name = $name;
+    $name = stripslashes($name);
+    $password = stripslashes($pass);
+    $password = $conn->real_escape_string($password);
+    $password = hash('sha512', $password);
+
     $sql = "UPDATE `elm_users` 
-              SET `username` = ".$name.", `password` = ".$pass.", `email` = ".$mail."
+              SET `username` = '".$name."', `password` = '".$password."', `email` = '".$mail."'
               WHERE `usersID` = ".$id.";";
     $conn->query($sql);
 }
