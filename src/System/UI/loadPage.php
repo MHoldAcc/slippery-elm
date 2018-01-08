@@ -6,18 +6,22 @@ function elm_Page_Load(){
 
     global  $elm_Page_HTML;
     global $elm_Page_Content;
+    global $elm_Page_CurrentPage;
 
     elm_Page_GetCurrentPageId();
 
     $elm_Page_HTML = file_get_contents('Styling/index.html', FILE_USE_INCLUDE_PATH);
 
-    $elm_Page_Content = '<h1>404 Page not found</h1>';
+    $elm_Page_CurrentPage = new elm_Page();
+    $elm_Page_CurrentPage -> name = '404 Error';
+    $elm_Page_CurrentPage -> id = 'elm_404';
+    $elm_Page_CurrentPage -> content = '<h1>404 Page not found</h1>';
 
     elm_Page_CreateMenu();
 
     elm_Page_LoginFunctionality();
 
-    elm_Page_ReplacePlaceholder("[elm_PageContent]", $elm_Page_Content);
+    elm_Page_ReplacePlaceholder("[elm_PageContent]", $elm_Page_CurrentPage->content);
 
     eval('?>'. $elm_Page_HTML . '<?php');
 }
@@ -28,11 +32,16 @@ function elm_Page_ReplacePlaceholder($placeholder, $value){
 }
 
 function elm_Page_LoginFunctionality(){
-    global  $elm_Page_Content;
+    global $elm_Page_CurrentPage;
 
     //Login functionality
-    if(isset($_GET['login']))
-        $elm_Page_Content = file_get_contents('System/UI/HTML/loginMask.html', FILE_USE_INCLUDE_PATH);
+    if(isset($_GET['login'])){
+        $elm_Page_CurrentPage = new elm_Page();
+        $elm_Page_CurrentPage -> name = 'Login';
+        $elm_Page_CurrentPage -> id = 'elm_Login';
+        $elm_Page_CurrentPage -> content = file_get_contents('System/UI/HTML/loginMask.html', FILE_USE_INCLUDE_PATH);
+    }
+
     if(isset($_GET['logout']))
         elm_Login_Logout();
     if(elm_Login_IsLoggedIn()){
@@ -49,17 +58,23 @@ function elm_Page_LoginFunctionality(){
 }
 
 function elm_Page_CreateMenu(){
-    global $elm_Page_Content;
     $menuContent = '';
     foreach (elm_Page_GetAllPages() as $page){
         $menuContent = $menuContent . '<a href="index.php?page='. $page->id . '"';
         if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
             $menuContent = $menuContent . 'class="active"';
-            $elm_Page_Content = $page->content;
+            elm_Page_SetPageContent($page);
         }
         $menuContent = $menuContent . '>'. $page->name .'</a>';
     }
     elm_Page_ReplacePlaceholder("[elm_PageNav]", $menuContent);
+}
+
+function elm_Page_SetPageContent($page){
+    global $elm_Page_Content;
+    global $elm_Page_CurrentPage;
+    $elm_Page_Content = $page->content;
+    $elm_Page_CurrentPage = $page;
 }
 
 function elm_Page_GetAllPages(){
