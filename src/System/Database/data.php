@@ -232,4 +232,51 @@ function getPages(){
     }
     return $pages;
 }
+
+/**
+ * Creates a user in the database
+ * @param $userName
+ * @param $password
+ * @param $mail
+ * @param $roleId
+ * @return bool User creation was successful
+ *
+ * CREATE TABLE `elm_users` (
+ * `usersID` int(11) NOT NULL,
+ * `username` varchar(255) NOT NULL,
+ * `password` varchar(255) NOT NULL,
+ * `email` varchar(255) NOT NULL,
+ * `isActive` tinyint(1) NOT NULL,
+ * `usersCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `usersModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `usersCreaterID` int(11) NOT NULL,
+ * `usersModifierID` int(11) NOT NULL,
+ * `role_FK` int(11) NOT NULL
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ *
+ */
+function updateUser($name, $pass, $mail){
+    GLOBAL $conn;
+    $sql = "UPDATE `elm_users` 
+              SET `username` = ".$name.", `password` = ".$pass.", `email` = ".$mail.";";
+    $conn->query($sql);
+}
+
+function deleteUser($name){
+    GLOBAL $conn;
+    $sql = "DELETE FROM `elm_users`
+              WHERE `username` = ".$name.";";
+    $conn->query($sql);
+}
+
+function getRole(){
+    GLOBAL $conn;
+    $roles = array();
+    $sql = "SELECT * FROM `elm_role`;";
+    $res = $conn->query($sql);
+    while ($row = $res->fetch_assoc()){
+        array_push($roles, $row);
+    }
+    return $roles;
+}
 ?>
