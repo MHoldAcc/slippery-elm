@@ -101,7 +101,7 @@ function elm_Page_GetAllPages(){
         $userPage = new elm_Page();
         $userPage -> id = 'elm_User_Edit';
         $userPage -> content = file_get_contents('System/UI/HTML/user.html', FILE_USE_INCLUDE_PATH);
-        $userPage -> name = 'Benutzer';
+        $userPage -> name = $_SESSION['login_user'];
         $userPage -> sorting = 9800;
         array_push($pages, $userPage);
     }
