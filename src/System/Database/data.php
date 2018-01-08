@@ -307,4 +307,12 @@ function elm_Data_GetRole(){
     }
     return $roles;
 }
+
+function elm_Data_GetCurrentVersion(){
+    //Returns newest database version from db
+}
+
+function elm_Data_ExecuteUpdate(){
+    //Executes all Scripts in MariaDb Folder which are not in database
+}
 ?>
