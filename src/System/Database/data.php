@@ -131,11 +131,13 @@ function elm_Data_login_User($userName, $password, $verify){
         $password = $conn->real_escape_string($password);
         $password = hash('sha512', $password);
         // SQL query to fetch information of registered users and finds user match.
-        $stmt = "SELECT * FROM `elm_users` WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
+        $stmt = "SELECT usersID FROM `elm_users` WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
         $res = $conn->query($stmt);
         $rows = $res->num_rows;
         if ($rows == 1) {
             $_SESSION['login_user'] = $name; // Initializing Session
+            $rows = $res->fetch_row();
+            $_SESSION['login_user_id'] = $rows[0];
             $_SESSION['login_failure'] = 'false';
         } else {
             $_SESSION['login_failure'] = 'true';
@@ -273,7 +275,7 @@ function elm_Data_GetPages(){
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  *
  */
-function updateUser($id, $name, $pass, $mail){
+function elm_Data_UpdateUser($id, $name, $pass, $mail){
     GLOBAL $conn;
     $sql = "UPDATE `elm_users` 
               SET `username` = ".$name.", `password` = ".$pass.", `email` = ".$mail."

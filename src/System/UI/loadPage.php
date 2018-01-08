@@ -1,5 +1,6 @@
 <?php
 include_once("System/Business/Login/login.php");
+include_once("System/Business/User/user.php");
 
 function elm_Page_Load(){
     @session_start();
@@ -104,7 +105,7 @@ function elm_Page_GetAllPages(){
         $userPage -> sorting = 9800;
         array_push($pages, $userPage);
     }
-    
+
     //Orders Array
     usort($pages, function ($a, $b){return strcmp($a->sorting, $b->sorting);});
 
