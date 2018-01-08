@@ -176,7 +176,7 @@ function ExecSqlFile($filename) {
  * `pagesModifierID` int(11) NOT NULL
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
-function createPage($title, $content, $parentPage, $keywords, $sorting){
+function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting){
     GLOBAL $conn;
     $sql = "INSERT INTO `elm_pages` (`pagesName`, `pagesContent`, `pagesParentPage`, `pagesKeywords`, `pagesSorting`) 
             VALUES 
@@ -198,7 +198,7 @@ function createPage($title, $content, $parentPage, $keywords, $sorting){
  * `pagesModifierID` int(11) NOT NULL
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
-function adminUpdatePage($pageID, $title, $content, $keywords, $sorting){
+function elm_Data_AdminUpdatePage($pageID, $title, $content, $keywords, $sorting){
     GLOBAL $conn;
     $sql = "UPDATE `elm_pages` SET `pagesName` = ".$title.",`pagesContent` = ".$content.", `pagesKeywords` = ".$keywords.", `pagesSorting` = ".$sorting." WHERE `pagesID` = ".$pageID.";";
     $conn->query($sql);
@@ -218,7 +218,7 @@ function adminUpdatePage($pageID, $title, $content, $keywords, $sorting){
  * `pagesModifierID` int(11) NOT NULL
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
-function updatePageContent($pageID, $content){
+function elm_Data_UpdatePageContent($pageID, $content){
     GLOBAL $conn;
     $sql = "UPDATE `elm_pages` SET `pagesContent` = ".$content." WHERE `pagesID` = ".$pageID.";";
     $conn->query($sql);
@@ -283,14 +283,14 @@ function elm_Data_UpdateUser($id, $name, $pass, $mail){
     $conn->query($sql);
 }
 
-function deleteUser($id){
+function elm_Data_DeleteUser($id){
     GLOBAL $conn;
     $sql = "DELETE FROM `elm_users`
               WHERE `username` = ".$id.";";
     $conn->query($sql);
 }
 
-function getRole(){
+function elm_Data_GetRole(){
     GLOBAL $conn;
     $roles = array();
     $sql = "SELECT * FROM `elm_role`;";
