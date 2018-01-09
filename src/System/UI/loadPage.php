@@ -1,6 +1,7 @@
 <?php
 include_once("System/Business/Login/login.php");
 include_once("System/Business/User/user.php");
+include_once("System/Business/UserManagement/userManagement.php");
 
 function elm_Page_Load(){
     @session_start();
@@ -20,6 +21,8 @@ function elm_Page_Load(){
     elm_Page_CreateMenu();
 
     elm_Page_LoginFunctionality();
+
+    elm_Page_UserManagementFunctionality();
 
     elm_Page_ReplaceAllPlaceholders();
 
@@ -87,6 +90,15 @@ function elm_Page_GetAllPages(){
         $adminpage -> name = 'Admin';
         $adminpage -> sorting = 9900;
         array_push($pages, $adminpage);
+
+        //Adds User Management Page
+        $userMgmtPage = new elm_Page();
+        $userMgmtPage -> id = "elm_UserMgmt";
+        $userMgmtPage -> content = file_get_contents('System/UI/HTML/userManagement.php', FILE_USE_INCLUDE_PATH);
+        $userMgmtPage -> name = "User Management";
+        $userMgmtPage -> parentPage = 'elm_Admin';
+        $userMgmtPage -> sorting = 9910;
+        array_push($pages, $userMgmtPage);
 
         //Adds Edit Page
         $editPage = new elm_Page();
