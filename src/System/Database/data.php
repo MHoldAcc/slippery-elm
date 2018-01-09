@@ -93,7 +93,11 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
     $password = stripslashes($password);
     $password = $conn->real_escape_string($password);
     $password = hash('sha512', $password);
-    $stmt = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) VALUES ('".$name."', '".$password."', '".$mail."',1,'".$roleId."')";
+    $email = $mail;
+    $email = stripslashes($email);
+    $roleID = $roleId;
+    $roleID = stripslashes($roleID);
+    $stmt = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) VALUES ('".$name."', '".$password."', '".$email."','1','".$roleID."')";
     $query = $conn->query($stmt);
     if ($query){
         $created = true;
@@ -292,8 +296,11 @@ function elm_Data_UpdateUser($id, $name, $pass, $mail){
 
 function elm_Data_DeleteUser($id){
     GLOBAL $conn;
+
+    $id = stripslashes($id);
+
     $sql = "DELETE FROM `elm_users`
-              WHERE `username` = ".$id.";";
+              WHERE `usersID` = ".$id.";";
     $conn->query($sql);
 }
 
