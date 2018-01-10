@@ -49,11 +49,12 @@ a {
 
 /* Dropdown button */
 .dropdown .dropbtn {
-    font-size: 18px;
+    font-size: 20px;
     border: none;
     outline: none;
     color: white;
     background-color: inherit;
+    padding: 20px;
 }
 
 /* Add a background color to navbar links on hover */
