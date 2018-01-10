@@ -64,12 +64,20 @@ function elm_Page_CreateMenu(){
     global $elm_Page_NavBar;
     $menuContent = '';
     foreach (elm_Page_GetAllPages() as $page){
-        $menuContent = $menuContent . '<a href="index.php?page='. $page->id . '"';
-        if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
-            $menuContent = $menuContent . 'class="active"';
-            elm_Page_SetCurrentPage($page);
-        }
-        $menuContent = $menuContent . '>'. $page->name .'</a>';
+        $menuContent = $menuContent . '<div class="dropdown">
+             <button class="dropbtn">
+             <a href="index.php?page='. $page->id . '"';
+                if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
+                    $menuContent = $menuContent .
+                    elm_Page_SetCurrentPage($page);
+                }$menuContent = $menuContent . '>'. $page->name .'</a>
+             </button>
+             <div class="dropdown-content">  
+               <a href="#">Link 1</a>
+               <a href="#">Link 2</a>
+               <a href="#">Link 3</a>
+             </div>
+           </div>';
     }
     $elm_Page_NavBar = $menuContent;
 }
