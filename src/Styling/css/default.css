@@ -105,6 +105,10 @@ a {
     width: 500px;
 }
 
+.editPage_table {
+    width: 350px;
+}
+
 .anmelden {
     padding: 0px 0 20px 40px;
     float: left;

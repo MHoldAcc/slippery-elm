@@ -2,6 +2,7 @@
 include_once("System/Business/Login/login.php");
 include_once("System/Business/User/user.php");
 include_once("System/Business/UserManagement/userManagement.php");
+include_once("System/Business/PageManagement/pageManagement.php");
 
 function elm_Page_Load()
 {
@@ -24,6 +25,8 @@ function elm_Page_Load()
     elm_Page_LoginFunctionality();
 
     elm_Page_UserManagementFunctionality();
+
+    elm_Page_PageManagementFunctionality();
 
     elm_Page_ReplaceAllPlaceholders();
 
@@ -106,7 +109,7 @@ function elm_Page_GetAllPages()
         //Adds Edit Page
         $editPage = new elm_Page();
         $editPage->id = 'elm_Page_Edit';
-        $editPage->content = file_get_contents('System/UI/HTML/editPage.html', FILE_USE_INCLUDE_PATH);
+        $editPage->content = file_get_contents('System/UI/HTML/editPage.php', FILE_USE_INCLUDE_PATH);
         $editPage->name = 'Seite bearbeiten';
         $editPage->parentPage = 'elm_Admin';
         $editPage->sorting = 9930;
