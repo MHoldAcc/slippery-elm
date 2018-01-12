@@ -10,6 +10,9 @@ if ($conn->connect_error) {
     die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
 }
 
+/**
+ * initialize DB if it isn't initialized yet
+ */
 function elm_Data_InitializeDb(){
     include_once"MariaDb/initializeMariaDB.php";
     initializeMariaDB();
@@ -53,7 +56,8 @@ function elm_Data_GetUsers(){
     //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
     GLOBAL $conn;
     $elmUsers = array();
-    $sql = "SELECT * FROM `elm_users` WHERE `isActive` = 1;";
+    $sql = "SELECT * FROM `elm_users` 
+              WHERE `isActive` = 1;";
     $res = $conn->query($sql);
     if($res){
         while ($row = $res->fetch_assoc()){
@@ -97,8 +101,10 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
     $email = stripslashes($email);
     $roleID = $roleId;
     $roleID = stripslashes($roleID);
-    $stmt = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) VALUES ('".$name."', '".$password."', '".$email."','1','".$roleID."')";
-    $query = $conn->query($stmt);
+    $sql = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) 
+              VALUES 
+              ('".$name."', '".$password."', '".$email."','1','".$roleID."')";
+    $query = $conn->query($sql);
     if ($query){
         $created = true;
     }
@@ -113,12 +119,14 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
 function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
     $id = "";
-    $sql = "SELECT `roleID` FROM `elm_role` WHERE `roleName` LIKE '.$roleName.'";
+    $sql = "SELECT `roleID` FROM `elm_role` 
+              WHERE `roleName` LIKE '.$roleName.'";
     $res = $conn->query($sql);
     if ($res){
         $rows = $res->fetch_row();
         $id = $rows[0];
     }
+    print_r($id);
     return $id;
 }
 
@@ -135,8 +143,9 @@ function elm_Data_login_User($userName, $password, $verify){
         $password = $conn->real_escape_string($password);
         $password = hash('sha512', $password);
         // SQL query to fetch information of registered users and finds user match.
-        $stmt = "SELECT usersID FROM `elm_users` WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
-        $res = $conn->query($stmt);
+        $sql = "SELECT usersID FROM `elm_users` 
+                  WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
+        $res = $conn->query($sql);
         $rows = $res->num_rows;
         if ($rows == 1) {
             $_SESSION['login_user'] = $name; // Initializing Session
@@ -204,7 +213,9 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
  */
 function elm_Data_AdminUpdatePage($pageID, $title, $content, $keywords, $sorting){
     GLOBAL $conn;
-    $sql = "UPDATE `elm_pages` SET `pagesName` = ".$title.",`pagesContent` = ".$content.", `pagesKeywords` = ".$keywords.", `pagesSorting` = ".$sorting." WHERE `pagesID` = ".$pageID.";";
+    $sql = "UPDATE `elm_pages` 
+              SET `pagesName` = ".$title.",`pagesContent` = ".$content.", `pagesKeywords` = ".$keywords.", `pagesSorting` = ".$sorting." 
+              WHERE `pagesID` = ".$pageID.";";
     $conn->query($sql);
 }
 
@@ -224,7 +235,9 @@ function elm_Data_AdminUpdatePage($pageID, $title, $content, $keywords, $sorting
  */
 function elm_Data_UpdatePageContent($pageID, $content){
     GLOBAL $conn;
-    $sql = "UPDATE `elm_pages` SET `pagesContent` = ".$content." WHERE `pagesID` = ".$pageID.";";
+    $sql = "UPDATE `elm_pages` 
+              SET `pagesContent` = ".$content." 
+              WHERE `pagesID` = ".$pageID.";";
     $conn->query($sql);
 }
 
@@ -253,8 +266,57 @@ function elm_Data_GetPages(){
         $pageObject->modifierId = $page['pagesModifierID'];
         array_push($pageObjects, $pageObject);
     }
-
     return $pageObjects;
+}
+
+function elm_Data_GetSpecificPages($pageID){
+    GLOBAL $conn;
+    $pages = array();
+    $sql = "SELECT * FROM `elm_pages` 
+              WHERE `pagesID` = ".$pageID.";";
+    $res = $conn->query($sql);
+    while ($row = $res->fetch_assoc()) {
+        array_push($pages, $row);
+    }
+
+    //Parses Page Objects
+    $pageObjects = array();
+    foreach ($pages as $page) {
+        $pageObject = new elm_Page();
+        $pageObject->id = $page['pagesID'];
+        $pageObject->name = $page['pagesName'];
+        $pageObject->content = $page['pagesContent'];
+        $pageObject->parentPage = $page['pagesParentPage'];
+        $pageObject->keywords = $page['pagesKeywords'];
+        $pageObject->sorting = $page['pagesSorting'];
+        $pageObject->created = $page['pagesCreated'];
+        $pageObject->modified = $page['pagesModified'];
+        $pageObject->creatorId = $page['pagesCreaterID'];
+        $pageObject->modifierId = $page['pagesModifierID'];
+        array_push($pageObjects, $pageObject);
+    }
+    return $pageObjects;
+}
+
+/**
+ * CREATE TABLE `elm_pages` (
+ * `pagesID` int(11) NOT NULL,
+ * `pagesName` varchar(255) NOT NULL,
+ * `pagesContent` text,
+ * `pagesParentPage` varchar(255),
+ * `pagesKeywords` varchar(255) NOT NULL,
+ * `pagesSorting` int(11) NOT NULL,
+ * `pagesCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `pagesCreaterID` int(11) NOT NULL,
+ * `pagesModifierID` int(11) NOT NULL
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
+function elm_Data_DeletePages($pageID){
+    GLOBAL $conn;
+    $sql = "DELETE * FROM `elm_pages` 
+              WHERE `pagesID` = '".$pageID."';";
+    $conn->query($sql);
 }
 
 /**
