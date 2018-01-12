@@ -213,8 +213,8 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
 function elm_Data_AdminUpdatePage($pageID, $title, $content, $keywords, $sorting){
     GLOBAL $conn;
     $sql = "UPDATE `elm_pages` 
-              SET `pagesName` = ".$title.",`pagesContent` = ".$content.", `pagesKeywords` = ".$keywords.", `pagesSorting` = ".$sorting." 
-              WHERE `pagesID` = ".$pageID.";";
+              SET `pagesName` = '".$title."',`pagesContent` = '".$content."', `pagesKeywords` = '".$keywords."', `pagesSorting` = '".$sorting."' 
+              WHERE `pagesID` = '".$pageID."';";
     $conn->query($sql);
 }
 
@@ -313,7 +313,7 @@ function elm_Data_GetSpecificPages($pageID){
  */
 function elm_Data_DeletePages($pageID){
     GLOBAL $conn;
-    $sql = "DELETE * FROM `elm_pages` 
+    $sql = "DELETE FROM `elm_pages` 
               WHERE `pagesID` = '".$pageID."';";
     $conn->query($sql);
 }
