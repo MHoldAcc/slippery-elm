@@ -9,7 +9,8 @@ $conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Se
 if ($conn->connect_error) {
     die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
 }
-
+$sql = "SET NAMES utf8;";
+$conn->query($sql);
 /**
  * initialize DB if it isn't initialized yet
  */
@@ -91,7 +92,6 @@ function elm_Data_GetUsers(){
  */
 function elm_Data_CreateUser($userName, $password, $mail, $roleID){
     GLOBAL $conn;
-    echo $userName;
     $created = false;
     $name = $userName;
     $name = stripslashes($name);
@@ -104,7 +104,6 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleID){
     $sql = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) 
               VALUES 
               ('".$name."', '".$password."', '".$email."','1','".$roleID."');";
-    echo "('".$name."', '".$password."', '".$email."','1','".$roleID."');";
     $query = $conn->query($sql);
     if ($query){
         $created = true;
@@ -115,7 +114,7 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleID){
 /**
  * Gets the id of any role by the role name
  * @param $roleName
- * @return int RoleId
+ * @return int RoleID
  */
 function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
@@ -128,7 +127,6 @@ function elm_Data_GetRoleId($roleName){
         $rows = $res->fetch_row();
         $id = $rows[0];
     }
-    echo $id;
     return $id;
 }
 
