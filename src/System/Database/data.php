@@ -72,7 +72,7 @@ function elm_Data_GetUsers(){
  * @param $userName
  * @param $password
  * @param $mail
- * @param $roleId
+ * @param $roleID
  * @return bool User creation was successful
  *
  * CREATE TABLE `elm_users` (
@@ -89,8 +89,9 @@ function elm_Data_GetUsers(){
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  *
  */
-function elm_Data_CreateUser($userName, $password, $mail, $roleId){
+function elm_Data_CreateUser($userName, $password, $mail, $roleID){
     GLOBAL $conn;
+    echo $userName;
     $created = false;
     $name = $userName;
     $name = stripslashes($name);
@@ -99,11 +100,11 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
     $password = hash('sha512', $password);
     $email = $mail;
     $email = stripslashes($email);
-    $roleID = $roleId;
     $roleID = stripslashes($roleID);
     $sql = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) 
               VALUES 
-              ('".$name."', '".$password."', '".$email."','1','".$roleID."')";
+              ('".$name."', '".$password."', '".$email."','1','".$roleID."');";
+    echo "('".$name."', '".$password."', '".$email."','1','".$roleID."');";
     $query = $conn->query($sql);
     if ($query){
         $created = true;
@@ -120,13 +121,14 @@ function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
     $id = "";
     $sql = "SELECT `roleID` FROM `elm_role` 
-              WHERE `roleName` LIKE '.$roleName.'";
+              WHERE `roleName` LIKE '".$roleName."';";
     $res = $conn->query($sql);
+    echo $res;
     if ($res){
         $rows = $res->fetch_row();
         $id = $rows[0];
     }
-    print_r($id);
+    echo $id;
     return $id;
 }
 

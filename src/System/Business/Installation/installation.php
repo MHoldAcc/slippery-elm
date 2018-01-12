@@ -13,6 +13,7 @@ if(isset($_POST['elm_Post_Username']) && isset($_POST['elm_Post_Password']) && i
         //Create Database
         if(!elm_Data_GetIsDbInitialized())
             elm_Data_InitializeDb();
+        echo "Initialized";
         //Create User and Create Database
         if(elm_Data_CreateUser($elm_Post_Username, $elm_Post_Password, $elm_Post_Email, elm_Data_GetRoleId('admin')))
             $elm_Installation_UserGotCreated = true;
