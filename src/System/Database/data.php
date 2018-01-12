@@ -126,7 +126,6 @@ function elm_Data_GetRoleId($roleName){
         $rows = $res->fetch_row();
         $id = $rows[0];
     }
-    print_r($id);
     return $id;
 }
 
