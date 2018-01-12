@@ -1,11 +1,13 @@
 <?php
     $pages = elm_Data_GetPages();
+    elm_Page_PageManagementFunctionality()
 ?>
 <h1>Edit Page Content</h1>
-
+<br><br>
+    <a class="content_link" href="index.php?addPage_admin" >Neuen Seite hinzufügen</a>
+<br><br>
 <?php
     if(true){
-        //include_once("HTML/editPageMask.php");
 
         echo "<table class=\"editPage_table\">
             <tr>
@@ -28,9 +30,9 @@
                     "<a class=\"content_link\" href='index.php?id=".$page->id."&editPage_admin'>Editieren</a>".
                     "</td>".
 
-                    //"<td>".
-                        //"<a class=\"content_link\" href='index.php?id=".$page->id."&deletePage_admin'>Löschen</a> ".
-                    //"</td>".
+                    "<td>".
+                        "<a class=\"content_link\" href='index.php?id=".$page->id."&deletePage_admin'>Löschen</a> ".
+                    "</td>".
                 "</tr>";
 
         }

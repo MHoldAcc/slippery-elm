@@ -314,7 +314,7 @@ function elm_Data_GetSpecificPages($pageID){
  */
 function elm_Data_DeletePages($pageID){
     GLOBAL $conn;
-    $sql = "DELETE * FROM `elm_pages` 
+    $sql = "DELETE FROM `elm_pages` 
               WHERE `pagesID` = '".$pageID."';";
     $conn->query($sql);
 }
