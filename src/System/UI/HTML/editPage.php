@@ -1,6 +1,5 @@
 <?php
 $pages = elm_Data_GetPages();
-elm_Page_PageManagementFunctionality()
 ?>
     <h1>Edit Page Content</h1>
     <br><br>
