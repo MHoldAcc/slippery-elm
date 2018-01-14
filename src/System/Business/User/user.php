@@ -13,7 +13,20 @@ function elm_User_EditValues($userName, $password, $mail){
     else{
         //Update failed
     }
-
 }
 
+if(isset($_GET['elm_EditUser_DeleteCurrentUser'])){
+    elm_User_DeleteCurrentUser();
+}
+
+function elm_User_DeleteCurrentUser(){
+    if(isset($_SESSION['login_user_id'])){
+        elm_Data_DeleteUser($_SESSION['login_user_id']);
+        elm_Login_Logout();
+        header("Location: index.php");
+    }
+    else{
+        //Deletion failed
+    }
+}
 ?>
