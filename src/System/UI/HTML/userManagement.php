@@ -20,11 +20,11 @@
 
 <table class="userMgmt_table">
     <tr>
-        <th>Username</th>
-        <th>E-Mail</th>
-        <th>Rolle</th>
-        <th>Actions</th>
-        <th></th>
+        <td>Username</td>
+        <td>E-Mail</td>
+        <td>Rolle</td>
+        <td>Actions</td>
+        <td></td>
     </tr>
     <?php
         //create table row for each user

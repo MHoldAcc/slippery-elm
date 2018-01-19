@@ -35,7 +35,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" value="User erstellen" id="elm_NewUser_Execute" name="elm_NewUser_Execute_admin" />
+                <input type="submit" value="User erstellen" id="elm_NewUser_Execute_admin" name="elm_NewUser_Execute_admin" />
             </td>
         </tr>
     </table>

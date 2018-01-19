@@ -46,7 +46,7 @@ function elm_Page_UserManagementFunctionality(){
         if (isset($_POST['elm_AddUser_Username']) && isset($_POST['elm_AddUser_Email']) && isset($_POST['elm_AddUser_Password']) && isset($_POST['elm_AddUser_Roll'])) {
             if (elm_UserManagement_isUsernameUnique($_POST['elm_AddUser_Username']) === true) {
                 if (elm_Data_CreateUser($_POST['elm_AddUser_Username'], $_POST['elm_AddUser_Password'], $_POST['elm_AddUser_Email'], $_POST['elm_AddUser_Roll'])) {
-                    header("Location: index.php?page=userMgmt");
+                    header("Location: index.php?page=elm_userManagement");
                 } else {
                     //TODO: error handling
                     echo "error";
