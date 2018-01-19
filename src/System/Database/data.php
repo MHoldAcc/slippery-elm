@@ -9,7 +9,8 @@ $conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Se
 if ($conn->connect_error) {
     die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
 }
-
+$sql = "SET NAMES utf8;";
+$conn->query($sql);
 /**
  * initialize DB if it isn't initialized yet
  */
@@ -114,7 +115,7 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
 /**
  * Gets the id of any role by the role name
  * @param $roleName
- * @return int RoleId
+ * @return int RoleID
  */
 function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
@@ -383,4 +384,27 @@ function elm_Data_GetCurrentVersion(){
 function elm_Data_ExecuteUpdate(){
     //Executes all Scripts in MariaDb Folder which are not in database
 }
+
+/**
+ * Looks if the page is the home page or not (create for this a homeFlag in the page table)
+ * Returns true or false
+ *
+ */
+function elm_Data_preventHomeDeletion($pageID) {
+    $isHome = false;
+    /*Insert code here*/
+    return isHome;
+}
+
+/**
+ * Checks if the user can edit a page or not
+ * Returns true or false
+ *
+ */
+function elm_Data_canUserEdit() {
+    $canEdit = false;
+    /*Insert code here*/
+    return $canEdit;
+}
+
 ?>
