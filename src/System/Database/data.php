@@ -89,7 +89,7 @@ function elm_Data_GetUsers(){
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  *
  */
-function elm_Data_CreateUser($userName, $password, $mail, $roleId){
+function elm_Data_CreateUser($userName, $password, $email, $roleID){
     GLOBAL $conn;
     $created = false;
     $name = $userName;
@@ -97,13 +97,12 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
     $password = stripslashes($password);
     $password = $conn->real_escape_string($password);
     $password = hash('sha512', $password);
-    $email = $mail;
     $email = stripslashes($email);
-    $roleID = $roleId;
     $roleID = stripslashes($roleID);
     $sql = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) 
               VALUES 
               ('".$name."', '".$password."', '".$email."','1','".$roleID."')";
+    echo $sql;
     $query = $conn->query($sql);
     if ($query){
         $created = true;
@@ -118,11 +117,12 @@ function elm_Data_CreateUser($userName, $password, $mail, $roleId){
  */
 function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
-    $id = "";
+    echo $roleName;
+    $id = array();
     $sql = "SELECT `roleID` FROM `elm_role` 
-              WHERE `roleName` LIKE '.$roleName.'";
-    $res = $conn->query($sql);
-    if ($res){
+              WHERE `roleName` LIKE '".$roleName."';";
+    //$res = $conn->query($sql);
+    if ($res = $conn->query($sql)){
         $rows = $res->fetch_row();
         $id = $rows[0];
     }
@@ -209,11 +209,13 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
  * `pagesCreaterID` int(11) NOT NULL,
  * `pagesModifierID` int(11) NOT NULL
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ *
+ * This function allows the editing of pages
  */
-function elm_Data_AdminUpdatePage($pageID, $title, $content, $keywords, $sorting){
+function elm_Data_AdminUpdatePage($pageID, $title, $parentpage, $content, $keywords, $sorting){
     GLOBAL $conn;
     $sql = "UPDATE `elm_pages` 
-              SET `pagesName` = '".$title."',`pagesContent` = '".$content."', `pagesKeywords` = '".$keywords."', `pagesSorting` = '".$sorting."' 
+              SET `pagesName` = '".$title."',`pagesParentPage` = '".$parentpage."',`pagesContent` = '".$content."', `pagesKeywords` = '".$keywords."', `pagesSorting` = '".$sorting."' 
               WHERE `pagesID` = '".$pageID."';";
     $conn->query($sql);
 }
