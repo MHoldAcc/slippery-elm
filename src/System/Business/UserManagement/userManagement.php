@@ -44,7 +44,6 @@ function elm_Page_UserManagementFunctionality(){
     if (isset($_POST['elm_NewUser_Execute_admin'])) {
         //validate inputs and if valid -> Store new User
         if (isset($_POST['elm_AddUser_Username']) && isset($_POST['elm_AddUser_Email']) && isset($_POST['elm_AddUser_Password']) && isset($_POST['elm_AddUser_Roll'])) {
-            header("Location: index.php?isUnique".(elm_UserManagement_isUsernameUnique($_POST['elm_AddUser_Username']) === true ? "true" : "false"));
             if (elm_UserManagement_isUsernameUnique($_POST['elm_AddUser_Username']) === true) {
                 if (elm_Data_CreateUser($_POST['elm_AddUser_Username'], $_POST['elm_AddUser_Password'], $_POST['elm_AddUser_Email'], $_POST['elm_AddUser_Roll'])) {
                     header("Location: index.php?page=userMgmt");
@@ -65,10 +64,9 @@ function elm_Page_UserManagementFunctionality(){
     else if (isset($_POST['elm_EditUser_Execute_admin'])){
         //validate inputs and if valid -> update user
         if (isset($_POST['elm_EditUser_Username']) && isset($_POST['elm_EditUser_Email']) && isset($_POST['elm_EditUser_Password']) && isset($_POST['elm_EditUser_Id'])) {
-            header("Location: index.php?isUnique".(elm_UserManagement_isUsernameUnique($_POST['elm_AddUser_Username'], $_POST['elm_EditUser_Id']) === true ? "true" : "false"));
             if (elm_UserManagement_isUsernameUnique($_POST['elm_AddUser_Username'], $_POST['elm_EditUser_Id']) === true) {
                 elm_Data_UpdateUser($_POST['elm_EditUser_Id'], $_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email']);
-                header("Location: index.php?page=elm_UserMgmt");
+                header("Location: index.php?page=elm_UserManagement");
             }
             else {
                 //TODO: error handling
@@ -84,7 +82,7 @@ function elm_Page_UserManagementFunctionality(){
         //delete User
         if (isset($_GET['id'])) {
             elm_Data_DeleteUser($_GET['id']);
-            header("Location: index.php?page=elm_UserMgmt");
+            header("Location: index.php?page=elm_UserManagement");
         }
         else {
             //TODO: error handling
