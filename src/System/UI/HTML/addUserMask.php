@@ -25,6 +25,7 @@
             <td>
                 <select id="elm_AddUser_Roll" name="elm_AddUser_Roll">
                     <?php
+                        // create option for each role
                         foreach($roles as $role){
                             echo "<option value=\"".$role['roleID']."\">".$role['roleName']."</option>";
                         }
