@@ -1,7 +1,10 @@
 <?php
+    //load users and roles form db
     $users = elm_Data_GetUsers();
     $roles = elm_Data_GetRole();
 
+    //create roleMap: key-> roleID, value-> roleName
+    //used to display roleName in Table
     $roleMap = array();
     foreach ($roles as $role){
         $roleMap[$role['roleID']] = $role['roleName'];
@@ -24,6 +27,7 @@
         <th></th>
     </tr>
     <?php
+        //create table row for each user
         foreach($users as $user){
             echo "<tr>".
                     "<td>".$user['username']."</td>".

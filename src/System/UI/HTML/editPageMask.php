@@ -15,6 +15,11 @@ $page = elm_Data_GetSpecificPages($_GET['id']);
         </tr>
 
         <tr>
+            <td>Parent Page:</td>
+            <td><input type="text" id="elm_EditPage_parentPage" value="<?php echo $page[0]->parentPage; ?>" name="elm_EditPage_parentPage" size="42" > </td>
+        </tr>
+
+        <tr>
             <td>Keyword:</td>
             <td><input type="text" id="elm_EditPage_Keyword" value="<?php echo $page[0]->keywords; ?>" name="elm_EditPage_Keyword" size="42" > </td>
         </tr>

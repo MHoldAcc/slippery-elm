@@ -99,7 +99,7 @@ function elm_Page_GetAllPages()
 
         //Adds User Management Page
         $userMgmtPage = new elm_Page();
-        $userMgmtPage->id = "elm_UserMgmt";
+        $userMgmtPage->id = "elm_UserManagement";
         $userMgmtPage->content = file_get_contents('System/UI/HTML/userManagement.php', FILE_USE_INCLUDE_PATH);
         $userMgmtPage->name = "User Management";
         $userMgmtPage->parentPage = 'elm_Admin';
