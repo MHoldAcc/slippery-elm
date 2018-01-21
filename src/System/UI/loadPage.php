@@ -1,9 +1,13 @@
 <?php
+//Includes the needed files
 include_once("System/Business/Login/login.php");
 include_once("System/Business/User/user.php");
 include_once("System/Business/UserManagement/userManagement.php");
 include_once("System/Business/PageManagement/pageManagement.php");
 
+/**
+ * Loads and prints the content of the current webpage
+ */
 function elm_Page_Load()
 {
     @session_start();
@@ -33,12 +37,22 @@ function elm_Page_Load()
     eval('?>' . $elm_Page_HTML . '<?php');
 }
 
+/**
+ * Replaces any text placeholder in html construct with given value
+ * @param $placeholder The placeholder to replace
+ * @param $value The value to set
+ */
 function elm_Page_ReplacePlaceholder($placeholder, $value)
 {
     global $elm_Page_HTML;
     $elm_Page_HTML = str_replace($placeholder, $value, $elm_Page_HTML);
 }
 
+/**
+ * Sets Login Button (Login/Logout)
+ * Load login form if url = index.php?login
+ * Logs out user if url = index.php?logout
+ */
 function elm_Page_LoginFunctionality()
 {
     global $elm_Page_CurrentPage;
@@ -65,6 +79,9 @@ function elm_Page_LoginFunctionality()
     }
 }
 
+/**
+ * Creates the nav menu
+ */
 function elm_Page_CreateMenu(){
     global $elm_Page_NavBar;
     $menuContent = '';
@@ -78,12 +95,20 @@ function elm_Page_CreateMenu(){
     $elm_Page_NavBar = $menuContent;
 }
 
+/**
+ * Sets the current page shown, as a global variable
+ * @param $page The page to set
+ */
 function elm_Page_SetCurrentPage($page)
 {
     global $elm_Page_CurrentPage;
     $elm_Page_CurrentPage = $page;
 }
 
+/**
+ * Gets all pages from the database and all predefined pages.
+ * @return array An array of all pages as elm_Page objects
+ */
 function elm_Page_GetAllPages()
 {
     $pages = elm_Data_GetPages();
@@ -132,6 +157,11 @@ function elm_Page_GetAllPages()
     return $pages;
 }
 
+/**
+ * Sets the id of the current page as a session variable
+ * Also sets last page to the session
+ * Variables = elm_Pages_CurrentPageId and elm_Pages_LastPageId
+ */
 function elm_Page_GetCurrentPageId()
 {
     if (isset($_SESSION['elm_Pages_CurrentPageId'])) {
@@ -143,6 +173,9 @@ function elm_Page_GetCurrentPageId()
         $_SESSION['elm_Pages_CurrentPageId'] = 0;
 }
 
+/**
+ * Replaces all placeholders created by slippery elm in the html construct
+ */
 function elm_Page_ReplaceAllPlaceholders()
 {
     global $elm_Page_CurrentPage;
