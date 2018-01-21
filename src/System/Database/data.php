@@ -214,16 +214,21 @@ function elm_Data_login_User($userName, $password, $verify){
                   WHERE `username` LIKE ? AND `password` LIKE ?;");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
-        $res = $sql->execute();
-        $rows = $res->num_rows;
-        if ($rows == 1) {
-            $_SESSION['login_user'] = $name; // Initializing Session
-            $rows = $sql->fetch(PDO::FETCH_OBJ);
-            $_SESSION['login_user_id'] = $rows[0];
-            $_SESSION['login_failure'] = 'false';
-        } else {
+        if($sql->execute()){
+            $rows = $sql->rowCount();
+            if ($rows == 1) {
+                $_SESSION['login_user'] = $name; // Initializing Session
+                $row = $sql->fetch(PDO::FETCH_OBJ);
+                $_SESSION['login_user_id'] = $row->usersID;
+                $_SESSION['login_failure'] = 'false';
+            } else {
+                $_SESSION['login_failure'] = 'true';
+            }
+        }
+        else{
             $_SESSION['login_failure'] = 'true';
         }
+
     }
     return true;
 }
