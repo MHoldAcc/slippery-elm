@@ -269,6 +269,7 @@ function elm_Data_GetPages(){
         $pageObject->parentPage = $page['pagesParentPage'];
         $pageObject->keywords = $page['pagesKeywords'];
         $pageObject->sorting = $page['pagesSorting'];
+        $pageObject->sorting = $page['pagesIsHome'];
         $pageObject->created = $page['pagesCreated'];
         $pageObject->modified = $page['pagesModified'];
         $pageObject->creatorId = $page['pagesCreaterID'];
@@ -299,6 +300,7 @@ function elm_Data_GetSpecificPages($pageID){
         $pageObject->parentPage = $page['pagesParentPage'];
         $pageObject->keywords = $page['pagesKeywords'];
         $pageObject->sorting = $page['pagesSorting'];
+        $pageObject->sorting = $page['pagesIsHome'];
         $pageObject->created = $page['pagesCreated'];
         $pageObject->modified = $page['pagesModified'];
         $pageObject->creatorId = $page['pagesCreaterID'];
@@ -371,6 +373,28 @@ function elm_Data_UpdateUser($id, $name, $pass, $mail){
     $sql->execute();
 }
 
+/**
+ * Creates a user in the database
+ * @param $userName
+ * @param $password
+ * @param $mail
+ * @param $roleId
+ * @return bool User creation was successful
+ *
+ * CREATE TABLE `elm_users` (
+ * `usersID` int(11) NOT NULL,
+ * `username` varchar(255) NOT NULL,
+ * `password` varchar(255) NOT NULL,
+ * `email` varchar(255) NOT NULL,
+ * `isActive` tinyint(1) NOT NULL,
+ * `usersCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `usersModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ * `usersCreaterID` int(11) NOT NULL,
+ * `usersModifierID` int(11) NOT NULL,
+ * `role_FK` int(11) NOT NULL
+ * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ *
+ */
 function elm_Data_DeleteUser($id){
     GLOBAL $conn;
     $id = stripslashes($id);
@@ -391,29 +415,30 @@ function elm_Data_GetRole(){
     return $roles;
 }
 
+/**
+ * Returns newest database version from db
+ */
 function elm_Data_GetCurrentVersion(){
-    //Returns newest database version from db
-}
-
-function elm_Data_ExecuteUpdate(){
-    //Executes all Scripts in MariaDb Folder which are not in database
+    GLOBAL $conn;
+    $dbVersion = "";
+    $sql = $conn->prepare("SELECT `databaseVersion` FROM `elm_version`;");
+    if ($sql->execute()){
+        $rows = $sql->fetch(PDO::FETCH_OBJ);
+        $dbVersion = $rows[0];
+    }
+    return $dbVersion;
 }
 
 /**
- * Looks if the page is the home page or not (create for this a homeFlag in the page table)
- * Returns true or false
- *
+ * Executes all Scripts in MariaDb Folder which are not in database
  */
-function elm_Data_preventHomeDeletion($pageID) {
-    $isHome = false;
+function elm_Data_ExecuteUpdate(){
     /*Insert code here*/
-    return isHome;
 }
 
 /**
  * Checks if the user can edit a page or not
  * Returns true or false
- *
  */
 function elm_Data_canUserEdit() {
     $canEdit = false;

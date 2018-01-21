@@ -24,6 +24,7 @@ class elm_Page {
     public $parentPage;
     public $keywords;
     public $sorting;
+    public $isHome;
     public $created;
     public $modified;
     public $creatorId;
