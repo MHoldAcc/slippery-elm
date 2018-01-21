@@ -15,7 +15,7 @@ $sql->execute();
  * initialize DB if it isn't initialized yet
  */
 function elm_Data_InitializeDb(){
-    include_once("config.php");
+    include("config.php");
     if ($elm_Settings_ConnectionHost == "mysql") {
         include_once "MariaDb/initializeMariaDB.php";
         initializeMariaDB();
@@ -438,7 +438,7 @@ function elm_Data_GetRoleId($roleName){
     $sql->bindParam(1, $roleName);
     if ($sql->execute()){
         $rows = $sql->fetch(PDO::FETCH_OBJ);
-        $id = $rows[0];
+        $id = $rows->roleID;
     }
     return $id;
 }
