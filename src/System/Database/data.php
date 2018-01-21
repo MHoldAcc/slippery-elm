@@ -344,7 +344,7 @@ function elm_Data_GetPages(){
     GLOBAL $conn;
     $pages = array();
     $sql = $conn->prepare("SELECT * FROM `elm_pages`;");
-    $res = $sql->execute();
+    $sql->execute();
     if($sql->execute()){
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             array_push($pages, $row);
@@ -379,31 +379,35 @@ function elm_Data_GetPages(){
 function elm_Data_GetSpecificPages($pageID){
     GLOBAL $conn;
     $pages = array();
+    $pageObjects = array();
+
     $sql = $conn->prepare("SELECT * FROM `elm_pages` 
               WHERE `pagesID` = ?;");
+
     $sql->bindParam(1, $pageID);
-    $res = $sql->execute();
-    while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
-        array_push($pages, $row);
+
+    if($sql->execute()){
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($pages, $row);
+        }
+        //Parses Page Objects
+        foreach ($pages as $page) {
+            $pageObject = new elm_Page();
+            $pageObject->id = $page->pagesID;
+            $pageObject->name = $page->pagesName;
+            $pageObject->content = $page->pagesContent;
+            $pageObject->parentPage = $page->pagesParentPage;
+            $pageObject->keywords = $page->pagesKeywords;
+            $pageObject->sorting = $page->pagesSorting;
+            $pageObject->sorting = $page->pagesIsHome;
+            $pageObject->created = $page->pagesCreated;
+            $pageObject->modified = $page->pagesModified;
+            $pageObject->creatorId = $page->pagesCreaterID;
+            $pageObject->modifierId = $page->pagesModifierID;
+            array_push($pageObjects, $pageObject);
+        }
     }
 
-    //Parses Page Objects
-    $pageObjects = array();
-    foreach ($pages as $page) {
-        $pageObject = new elm_Page();
-        $pageObject->id = $page['pagesID'];
-        $pageObject->name = $page['pagesName'];
-        $pageObject->content = $page['pagesContent'];
-        $pageObject->parentPage = $page['pagesParentPage'];
-        $pageObject->keywords = $page['pagesKeywords'];
-        $pageObject->sorting = $page['pagesSorting'];
-        $pageObject->sorting = $page['pagesIsHome'];
-        $pageObject->created = $page['pagesCreated'];
-        $pageObject->modified = $page['pagesModified'];
-        $pageObject->creatorId = $page['pagesCreaterID'];
-        $pageObject->modifierId = $page['pagesModifierID'];
-        array_push($pageObjects, $pageObject);
-    }
     return $pageObjects;
 }
 
@@ -456,9 +460,10 @@ function elm_Data_GetRole(){
     GLOBAL $conn;
     $roles = array();
     $sql = $conn->prepare("SELECT * FROM `elm_role`;");
-    $res = $sql->execute();
-    while ($row = $res->fetch(PDO::FETCH_ASSOC)){
-        array_push($roles, $row);
+    if($sql->execute()){
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
+            array_push($roles, $row);
+        }
     }
     return $roles;
 }
