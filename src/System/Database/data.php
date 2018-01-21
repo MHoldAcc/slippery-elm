@@ -15,7 +15,7 @@ $sql->execute();
  * initialize DB if it isn't initialized yet
  */
 function elm_Data_InitializeDb(){
-    include_once("config.php");
+    include("config.php");
     if ($elm_Settings_ConnectionHost == "mysql") {
         include_once "MariaDb/initializeMariaDB.php";
         initializeMariaDB();
@@ -135,16 +135,16 @@ function elm_Data_GetUsers(){
     //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
     GLOBAL $conn;
     $elmUsers = array();
-    $sql = $conn->prepare("SELECT * FROM `elm_users` 
-              WHERE `isActive` = 1;");
-    $res = $sql->execute();
-    if($res){
-        while ($row = $res->fetch(PDO::FETCH_ASSOC)){
+    $sql = $conn->prepare("SELECT * FROM elm_users 
+              WHERE isActive = 1;");
+    if($sql->execute()){
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
             array_push($elmUsers, $row);
         }
     }
     return $elmUsers;
 }
+
 
 /**
  * Creates a user in the database
@@ -214,16 +214,21 @@ function elm_Data_login_User($userName, $password, $verify){
                   WHERE `username` LIKE ? AND `password` LIKE ?;");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
-        $res = $sql->execute();
-        $rows = $res->num_rows;
-        if ($rows == 1) {
-            $_SESSION['login_user'] = $name; // Initializing Session
-            $rows = $sql->fetch(PDO::FETCH_OBJ);
-            $_SESSION['login_user_id'] = $rows[0];
-            $_SESSION['login_failure'] = 'false';
-        } else {
+        if($sql->execute()){
+            $rows = $sql->rowCount();
+            if ($rows == 1) {
+                $_SESSION['login_user'] = $name; // Initializing Session
+                $row = $sql->fetch(PDO::FETCH_OBJ);
+                $_SESSION['login_user_id'] = $row->usersID;
+                $_SESSION['login_failure'] = 'false';
+            } else {
+                $_SESSION['login_failure'] = 'true';
+            }
+        }
+        else{
             $_SESSION['login_failure'] = 'true';
         }
+
     }
     return true;
 }
@@ -340,8 +345,10 @@ function elm_Data_GetPages(){
     $pages = array();
     $sql = $conn->prepare("SELECT * FROM `elm_pages`;");
     $res = $sql->execute();
-    while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
-        array_push($pages, $row);
+    if($sql->execute()){
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($pages, $row);
+        }
     }
 
     //Parses Page Objects
@@ -436,7 +443,7 @@ function elm_Data_GetRoleId($roleName){
     $sql->bindParam(1, $roleName);
     if ($sql->execute()){
         $rows = $sql->fetch(PDO::FETCH_OBJ);
-        $id = $rows[0];
+        $id = $rows->roleID;
     }
     return $id;
 }
