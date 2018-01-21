@@ -5,12 +5,17 @@
  */
 @session_start();
 include_once("config.php");
-$conn = new mysqli($elm_Settings_ConnectionString, $elm_Settings_DbUser, $elm_Settings_DbPassword, $elm_Settings_Db);
+$conn = new PDO($elm_Settings_DNS, $elm_Settings_DbUser, $elm_Settings_DbPassword, array(
+    PDO::ATTR_PERSISTENT => true
+));
+/*
 if ($conn->connect_error) {
     die('Connect Error (' . $conn->connect_errno . ') '. $conn->connect_error);
 }
-$sql = "SET NAMES utf8;";
-$conn->query($sql);
+*/
+$sql->prepare("SET NAMES utf8;");
+$sql->execute();
+
 /**
  * initialize DB if it isn't initialized yet
  */
@@ -25,8 +30,8 @@ function elm_Data_InitializeDb(){
  */
 function elm_Data_GetIsDbInitialized(){
     GLOBAL $conn;
-    $sql = "SELECT * FROM `elm_version`;";
-    if ($conn->query($sql)){
+    $sql = $conn->prepare("SELECT * FROM `elm_version`;");
+    if ($sql->execute()){
         $initialized = true;
     } else {
         $initialized = false;
@@ -57,11 +62,11 @@ function elm_Data_GetUsers(){
     //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
     GLOBAL $conn;
     $elmUsers = array();
-    $sql = "SELECT * FROM `elm_users` 
-              WHERE `isActive` = 1;";
-    $res = $conn->query($sql);
+    $sql = $conn->prepare("SELECT * FROM `elm_users` 
+              WHERE `isActive` = 1;");
+    $res = $sql->execute();
     if($res){
-        while ($row = $res->fetch_assoc()){
+        while ($row = $res->fetch(PDO::FETCH_ASSOC)){
             array_push($elmUsers, $row);
         }
     }
@@ -96,16 +101,18 @@ function elm_Data_CreateUser($userName, $password, $email, $roleID){
     $name = $userName;
     $name = stripslashes($name);
     $password = stripslashes($password);
-    $password = $conn->real_escape_string($password);
+    //$password = $conn->real_escape_string($password);
     $password = hash('sha512', $password);
     $email = stripslashes($email);
     $roleID = stripslashes($roleID);
-    $sql = "INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) 
+    $sql = $conn->prepare("INSERT INTO `elm_users` (`username`, `password`, `email`, `isActive`, `role_FK`) 
               VALUES 
-              ('".$name."', '".$password."', '".$email."','1','".$roleID."')";
-    echo $sql;
-    $query = $conn->query($sql);
-    if ($query){
+              (?, ?, ?, 1, ?)");
+    $sql->bindParam(1, $name);
+    $sql->bindParam(2, $password);
+    $sql->bindParam(3, $email);
+    $sql->bindParam(4, $roleID);
+    if ($sql->execute()){
         $created = true;
     }
     return $created;
@@ -120,11 +127,11 @@ function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
     echo $roleName;
     $id = array();
-    $sql = "SELECT `roleID` FROM `elm_role` 
-              WHERE `roleName` LIKE '".$roleName."';";
-    //$res = $conn->query($sql);
-    if ($res = $conn->query($sql)){
-        $rows = $res->fetch_row();
+    $sql = $conn->prepare("SELECT `roleID` FROM `elm_role` 
+              WHERE `roleName` LIKE ?;");
+    $sql->bindParam(1, $roleName);
+    if ($sql->execute()){
+        $rows = $sql->fetch(PDO::FETCH_OBJ);
         $id = $rows[0];
     }
     return $id;
@@ -140,16 +147,18 @@ function elm_Data_login_User($userName, $password, $verify){
     if ($verify === $password) {
         $name = stripslashes($name);
         $password = stripslashes($password);
-        $password = $conn->real_escape_string($password);
+        //$password = $conn->real_escape_string($password);
         $password = hash('sha512', $password);
         // SQL query to fetch information of registered users and finds user match.
-        $sql = "SELECT usersID FROM `elm_users` 
-                  WHERE `username` LIKE '".$name."' AND `password` LIKE '".$password."';";
-        $res = $conn->query($sql);
+        $sql = $conn->prepare("SELECT usersID FROM `elm_users` 
+                  WHERE `username` LIKE ? AND `password` LIKE ?;");
+        $sql->bindParam(1, $name);
+        $sql->bindParam(2, $password);
+        $res = $sql->execute();
         $rows = $res->num_rows;
         if ($rows == 1) {
             $_SESSION['login_user'] = $name; // Initializing Session
-            $rows = $res->fetch_row();
+            $rows = $sql->fetch(PDO::FETCH_OBJ);
             $_SESSION['login_user_id'] = $rows[0];
             $_SESSION['login_failure'] = 'false';
         } else {
@@ -157,22 +166,6 @@ function elm_Data_login_User($userName, $password, $verify){
         }
     }
     return true;
-}
-
-function ExecSqlFile($filename) {
-    GLOBAL $conn;
-    if (!file_exists($filename)) {
-        return false;
-    }
-    $array = array();
-    $querys = explode("\n", file_get_contents($filename));
-    foreach ($querys as $q) {
-        $q = trim($q);
-        if (strlen($q)) {
-            mysqli_query($conn, $q) or die(mysqli_error($conn));
-        }
-    }
-    return $array;
 }
 
 /**
@@ -191,10 +184,15 @@ function ExecSqlFile($filename) {
  */
 function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting){
     GLOBAL $conn;
-    $sql = "INSERT INTO `elm_pages` (`pagesName`, `pagesContent`, `pagesParentPage`, `pagesKeywords`, `pagesSorting`) 
+    $sql = $conn->prepare("INSERT INTO `elm_pages` (`pagesName`, `pagesContent`, `pagesParentPage`, `pagesKeywords`, `pagesSorting`) 
             VALUES 
-            ('".$title."', '".$content."', '".$parentPage."', '".$keywords."', ".$sorting.");";
-    $conn->query($sql);
+            (?, ?, ?, ?, ?);");
+    $sql->bindParam(1, $title);
+    $sql->bindParam(2, $content);
+    $sql->bindParam(3, $parentPage);
+    $sql->bindParam(4, $keywords);
+    $sql->bindParam(5, $sorting);
+    $sql->execute();
 }
 
 /**
@@ -213,12 +211,18 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
  *
  * This function allows the editing of pages
  */
-function elm_Data_AdminUpdatePage($pageID, $title, $parentpage, $content, $keywords, $sorting){
+function elm_Data_AdminUpdatePage($pageID, $title, $parentPage, $content, $keywords, $sorting){
     GLOBAL $conn;
-    $sql = "UPDATE `elm_pages` 
-              SET `pagesName` = '".$title."',`pagesParentPage` = '".$parentpage."',`pagesContent` = '".$content."', `pagesKeywords` = '".$keywords."', `pagesSorting` = '".$sorting."' 
-              WHERE `pagesID` = '".$pageID."';";
-    $conn->query($sql);
+    $sql = $conn->prepare("UPDATE `elm_pages` 
+              SET `pagesName` = ?,`pagesParentPage` = ?,`pagesContent` = ?, `pagesKeywords` = ?, `pagesSorting` = ? 
+              WHERE `pagesID` = ?;");
+    $sql->bindParam(1, $title);
+    $sql->bindParam(2, $content);
+    $sql->bindParam(3, $parentPage);
+    $sql->bindParam(4, $keywords);
+    $sql->bindParam(5, $sorting);
+    $sql->bindParam(6, $pageID);
+    $sql->execute();
 }
 
 /**
@@ -234,21 +238,24 @@ function elm_Data_AdminUpdatePage($pageID, $title, $parentpage, $content, $keywo
  * `pagesCreaterID` int(11) NOT NULL,
  * `pagesModifierID` int(11) NOT NULL
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ *
  */
 function elm_Data_UpdatePageContent($pageID, $content){
     GLOBAL $conn;
-    $sql = "UPDATE `elm_pages` 
+    $sql = $conn->prepare("UPDATE `elm_pages` 
               SET `pagesContent` = ".$content." 
-              WHERE `pagesID` = ".$pageID.";";
-    $conn->query($sql);
+              WHERE `pagesID` = ".$pageID.";");
+    $sql->bindParam(1, $content);
+    $sql->bindParam(2, $pageID);
+    $sql->execute();
 }
 
 function elm_Data_GetPages(){
     GLOBAL $conn;
     $pages = array();
-    $sql = "SELECT * FROM `elm_pages`;";
-    $res = $conn->query($sql);
-    while ($row = $res->fetch_assoc()) {
+    $sql = $conn->prepare("SELECT * FROM `elm_pages`;");
+    $res = $sql->execute();
+    while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
         array_push($pages, $row);
     }
 
@@ -274,10 +281,11 @@ function elm_Data_GetPages(){
 function elm_Data_GetSpecificPages($pageID){
     GLOBAL $conn;
     $pages = array();
-    $sql = "SELECT * FROM `elm_pages` 
-              WHERE `pagesID` = ".$pageID.";";
-    $res = $conn->query($sql);
-    while ($row = $res->fetch_assoc()) {
+    $sql = $conn->prepare("SELECT * FROM `elm_pages` 
+              WHERE `pagesID` = ?;");
+    $sql->bindParam(1, $pageID);
+    $res = $sql->execute();
+    while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
         array_push($pages, $row);
     }
 
@@ -316,9 +324,10 @@ function elm_Data_GetSpecificPages($pageID){
  */
 function elm_Data_DeletePages($pageID){
     GLOBAL $conn;
-    $sql = "DELETE FROM `elm_pages` 
-              WHERE `pagesID` = '".$pageID."';";
-    $conn->query($sql);
+    $sql = $conn->prepare("DELETE FROM `elm_pages` 
+              WHERE `pagesID` = ?;");
+    $sql->bindParam(1, $pageID);
+    $sql->execute();
 }
 
 /**
@@ -349,31 +358,34 @@ function elm_Data_UpdateUser($id, $name, $pass, $mail){
     $name = $name;
     $name = stripslashes($name);
     $password = stripslashes($pass);
-    $password = $conn->real_escape_string($password);
+    //$password = $conn->real_escape_string($password);
     $password = hash('sha512', $password);
 
-    $sql = "UPDATE `elm_users` 
-              SET `username` = '".$name."', `password` = '".$password."', `email` = '".$mail."'
-              WHERE `usersID` = ".$id.";";
-    $conn->query($sql);
+    $sql = $conn->prepare("UPDATE `elm_users` 
+              SET `username` = ?, `password` = ?, `email` = ?
+              WHERE `usersID` = ?;");
+    $sql->bindParam(1, $name);
+    $sql->bindParam(2, $password);
+    $sql->bindParam(3, $mail);
+    $sql->bindParam(4, $id);
+    $sql->execute();
 }
 
 function elm_Data_DeleteUser($id){
     GLOBAL $conn;
-
     $id = stripslashes($id);
-
-    $sql = "DELETE FROM `elm_users`
-              WHERE `usersID` = ".$id.";";
-    $conn->query($sql);
+    $sql = $conn->prepare("DELETE FROM `elm_users`
+              WHERE `usersID` = ?;");
+    $sql->bindParam(1, $id);
+    $sql->execute();
 }
 
 function elm_Data_GetRole(){
     GLOBAL $conn;
     $roles = array();
-    $sql = "SELECT * FROM `elm_role`;";
-    $res = $conn->query($sql);
-    while ($row = $res->fetch_assoc()){
+    $sql = $conn->prepare("SELECT * FROM `elm_role`;");
+    $res = $sql->execute();
+    while ($row = $res->fetch(PDO::FETCH_ASSOC)){
         array_push($roles, $row);
     }
     return $roles;
