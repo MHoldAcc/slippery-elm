@@ -5,10 +5,10 @@
  */
 @session_start();
 include_once("config.php");
-$conn = new PDO($elm_Settings_DNS, $elm_Settings_DbUser, $elm_Settings_DbPassword, array(
+$conn = new PDO($elm_Settings_DSN, $elm_Settings_DbUser, $elm_Settings_DbPassword, array(
     PDO::ATTR_PERSISTENT => true
 ));
-$sql->prepare("SET NAMES utf8;");
+$sql = $conn->prepare("SET NAMES utf8;");
 $sql->execute();
 
 /**
