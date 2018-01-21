@@ -135,16 +135,16 @@ function elm_Data_GetUsers(){
     //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
     GLOBAL $conn;
     $elmUsers = array();
-    $sql = $conn->prepare("SELECT * FROM `elm_users` 
-              WHERE `isActive` = 1;");
-    $res = $sql->execute();
-    if($res){
-        while ($row = $res->fetch(PDO::FETCH_ASSOC)){
+    $sql = $conn->prepare("SELECT * FROM elm_users 
+              WHERE isActive = 1;");
+    if($sql->execute()){
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
             array_push($elmUsers, $row);
         }
     }
     return $elmUsers;
 }
+
 
 /**
  * Creates a user in the database
@@ -340,8 +340,10 @@ function elm_Data_GetPages(){
     $pages = array();
     $sql = $conn->prepare("SELECT * FROM `elm_pages`;");
     $res = $sql->execute();
-    while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
-        array_push($pages, $row);
+    if($sql->execute()){
+        while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+            array_push($pages, $row);
+        }
     }
 
     //Parses Page Objects
