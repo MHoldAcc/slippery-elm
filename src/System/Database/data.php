@@ -82,12 +82,8 @@ function elm_Data_UpdateUser($id, $name, $pass, $mail){
 }
 
 /**
- * Creates a user in the database
- * @param $userName
- * @param $password
- * @param $mail
- * @param $roleId
- * @return bool User creation was successful
+ * Deletes a user from the database
+ * @param $id
  *
  * CREATE TABLE elm_users (
  * usersID int(11) NOT NULL,
@@ -144,7 +140,6 @@ function elm_Data_GetUsers(){
     }
     return $elmUsers;
 }
-
 
 /**
  * Creates a user in the database
@@ -412,6 +407,8 @@ function elm_Data_GetSpecificPages($pageID){
 }
 
 /**
+ * Deletes a page from database
+ *
  * CREATE TABLE elm_pages (
  * pagesID int(11) NOT NULL,
  * pagesName varchar(255) NOT NULL,
