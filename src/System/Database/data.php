@@ -288,8 +288,8 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
 function elm_Data_AdminUpdatePage($pageID, $pageName, $title, $parentPage, $content, $keywords, $sorting){
     GLOBAL $conn;
     $sql = $conn->prepare("UPDATE elm_pages 
-              SET pagesName = ?,pagesParentPage = ?,pagesContent = ?, pagesParentPage = ?, pagesKeywords = ?, pagesSorting = ? 
-              WHERE pagesID = ?;");
+              SET pagesname = ?,pagesparentpage = ?,pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
+              WHERE pagesid = ?;");
     $sql->bindParam(1, $pageName);
     $sql->bindParam(2, $title);
     $sql->bindParam(3, $content);
@@ -322,8 +322,8 @@ function elm_Data_AdminUpdatePage($pageID, $pageName, $title, $parentPage, $cont
 function elm_Data_UpdatePageContent($pageID, $content){
     GLOBAL $conn;
     $sql = $conn->prepare("UPDATE elm_pages 
-              SET pagesContent = ".$content." 
-              WHERE pagesID = ".$pageID.";");
+              SET pagescontent = ".$content." 
+              WHERE pagesid = ".$pageID.";");
     $sql->bindParam(1, $content);
     $sql->bindParam(2, $pageID);
     $sql->execute();
@@ -389,7 +389,7 @@ function elm_Data_GetSpecificPages($pageID){
     $pageObjects = array();
 
     $sql = $conn->prepare("SELECT * FROM elm_pages 
-              WHERE pagesID = ?;");
+              WHERE pagesid = ?;");
 
     $sql->bindParam(1, $pageID);
 
@@ -437,7 +437,7 @@ function elm_Data_GetSpecificPages($pageID){
 function elm_Data_DeletePages($pageID){
     GLOBAL $conn;
     $sql = $conn->prepare("DELETE FROM elm_pages 
-              WHERE pagesID = ?;");
+              WHERE pagesid = ?;");
     $sql->bindParam(1, $pageID);
     $sql->execute();
 }
@@ -450,7 +450,7 @@ function elm_Data_DeletePages($pageID){
 function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
     $id = array();
-    $sql = $conn->prepare("SELECT roleID FROM elm_role 
+    $sql = $conn->prepare("SELECT roleid FROM elm_role 
               WHERE roleName = ?;");
     $sql->bindParam(1, $roleName, PDO::PARAM_STR);
 
@@ -483,7 +483,7 @@ function elm_Data_GetRole(){
  */
 function elm_Data_CreateRole($roleName, $roleDescription){
     GLOBAL $conn;
-    $sql = $conn->prepare("INSERT INTO elm_role (roleName, roleDescription) 
+    $sql = $conn->prepare("INSERT INTO elm_role (rolename, roledescription) 
             VALUES 
             (?, ?);");
     $sql->bindParam(1, $roleName);
@@ -499,7 +499,7 @@ function elm_Data_DeleteRole($roleId){
     GLOBAL $conn;
     $id = stripslashes($roleId);
     $sql = $conn->prepare("DELETE FROM elm_role
-              WHERE roleID = ?;");
+              WHERE roleid = ?;");
     $sql->bindParam(1, $id);
     $sql->execute();
 }
@@ -515,7 +515,7 @@ function elm_Data_AssignmentRole($roleId){
     $roleId = stripslashes($roleId);
     $roles = array();
     $sql = $conn->prepare("SELECT * FROM elm_role
-              WHERE roleID = ?;");
+              WHERE roleid = ?;");
     $sql->bindParam(1, $roleId);
     $sql->execute();
     while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
@@ -530,7 +530,7 @@ function elm_Data_AssignmentRole($roleId){
 function elm_Data_GetCurrentVersion(){
     GLOBAL $conn;
     $dbVersion = "";
-    $sql = $conn->prepare("SELECT databaseVersion FROM elm_version;");
+    $sql = $conn->prepare("SELECT databaseversion FROM elm_version;");
     if ($sql->execute()){
         $rows = $sql->fetch(PDO::FETCH_OBJ);
         $dbVersion = $rows[0];
