@@ -214,7 +214,7 @@ function elm_Data_login_User($userName, $password, $verify){
             if ($rows == 1) {
                 $_SESSION['login_user'] = $name; // Initializing Session
                 $row = $sql->fetch(PDO::FETCH_OBJ);
-                $_SESSION['login_user_id'] = $row->usersID;
+                $_SESSION['login_user_id'] = $row->usersid;
                 $_SESSION['login_failure'] = 'false';
             } else {
                 $_SESSION['login_failure'] = 'true';
@@ -400,17 +400,17 @@ function elm_Data_GetSpecificPages($pageID){
         //Parses Page Objects
         foreach ($pages as $page) {
             $pageObject = new elm_Page();
-            $pageObject->id = $page->pagesID;
-            $pageObject->name = $page->pagesName;
-            $pageObject->content = $page->pagesContent;
-            $pageObject->parentPage = $page->pagesParentPage;
-            $pageObject->keywords = $page->pagesKeywords;
-            $pageObject->sorting = $page->pagesSorting;
-            $pageObject->sorting = $page->pagesIsHome;
-            $pageObject->created = $page->pagesCreated;
-            $pageObject->modified = $page->pagesModified;
-            $pageObject->creatorId = $page->pagesCreaterID;
-            $pageObject->modifierId = $page->pagesModifierID;
+            $pageObject->id = $page->pagesid;
+            $pageObject->name = $page->pagesname;
+            $pageObject->content = $page->pagescontent;
+            $pageObject->parentPage = $page->pagesparentpage;
+            $pageObject->keywords = $page->pageskeywords;
+            $pageObject->sorting = $page->pagessorting;
+            $pageObject->sorting = $page->pagesishome;
+            $pageObject->created = $page->pagescreated;
+            $pageObject->modified = $page->pagesmodified;
+            $pageObject->creatorId = $page->pagescreaterid;
+            $pageObject->modifierId = $page->pagesmodifierid;
             array_push($pageObjects, $pageObject);
         }
     }
@@ -500,7 +500,7 @@ function elm_Data_DeleteRole($roleId){
     $id = stripslashes($roleId);
     $sql = $conn->prepare("DELETE FROM elm_role
               WHERE roleID = ?;");
-    $sql->bindParam(1, $roleId);
+    $sql->bindParam(1, $id);
     $sql->execute();
 }
 
