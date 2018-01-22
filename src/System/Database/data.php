@@ -73,7 +73,7 @@ function elm_Data_UpdateUser($id, $name, $pass, $mail){
 
     $sql = $conn->prepare("UPDATE elm_users 
               SET username = ?, password = ?, email = ?
-              WHERE usersID = ?;");
+              WHERE usersid = ?;");
     $sql->bindParam(1, $name);
     $sql->bindParam(2, $password);
     $sql->bindParam(3, $mail);
@@ -103,7 +103,7 @@ function elm_Data_DeleteUser($id){
     GLOBAL $conn;
     $id = stripslashes($id);
     $sql = $conn->prepare("DELETE FROM elm_users
-              WHERE usersID = ?;");
+              WHERE usersid = ?;");
     $sql->bindParam(1, $id);
     $sql->execute();
 }
@@ -132,7 +132,7 @@ function elm_Data_GetUsers(){
     GLOBAL $conn;
     $elmUsers = array();
     $sql = $conn->prepare("SELECT * FROM elm_users 
-              WHERE isActive = TRUE;");
+              WHERE isactive = TRUE;");
     if($sql->execute()){
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
             array_push($elmUsers, $row);
@@ -169,11 +169,10 @@ function elm_Data_CreateUser($userName, $password, $email, $roleID){
     $name = $userName;
     $name = stripslashes($name);
     $password = stripslashes($password);
-    //$password = $conn->real_escape_string($password);
     $password = hash('sha512', $password);
     $email = stripslashes($email);
     $roleID = stripslashes($roleID);
-    $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isActive, role_FK) 
+    $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isactive, role_fk) 
               VALUES 
               (?, ?, ?, TRUE, ?);");
     $sql->bindParam(1, $name);
@@ -202,10 +201,8 @@ function elm_Data_login_User($userName, $password, $verify){
     if ($verify === $password) {
         $name = stripslashes($name);
         $password = stripslashes($password);
-        //$password = $conn->real_escape_string($password);
         $password = hash('sha512', $password);
-        // SQL query to fetch information of registered users and finds user match.
-        $sql = $conn->prepare("SELECT usersID FROM elm_users 
+        $sql = $conn->prepare("SELECT usersid FROM elm_users 
                   WHERE username = ? AND password = ?;");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
@@ -250,7 +247,7 @@ function elm_Data_login_User($userName, $password, $verify){
  */
 function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting){
     GLOBAL $conn;
-    $sql = $conn->prepare("INSERT INTO elm_pages (pagesName, pagesContent, pagesParentPage, pagesKeywords, pagesSorting) 
+    $sql = $conn->prepare("INSERT INTO elm_pages (pagesname, pagescontent, pagesparentpage, pageskeywords, pagessorting) 
             VALUES 
             (?, ?, ?, ?, ?);");
     $sql->bindParam(1, $title);
