@@ -400,17 +400,17 @@ function elm_Data_GetSpecificPages($pageID){
         //Parses Page Objects
         foreach ($pages as $page) {
             $pageObject = new elm_Page();
-            $pageObject->id = $page->pagesid;
-            $pageObject->name = $page->pagesname;
-            $pageObject->content = $page->pagescontent;
-            $pageObject->parentPage = $page->pagesparentpage;
-            $pageObject->keywords = $page->pageskeywords;
-            $pageObject->sorting = $page->pagessorting;
-            $pageObject->sorting = $page->pagesishome;
-            $pageObject->created = $page->pagescreated;
-            $pageObject->modified = $page->pagesmodified;
-            $pageObject->creatorId = $page->pagescreaterid;
-            $pageObject->modifierId = $page->pagesmodifierid;
+            $pageObject->id = $page['pagesid'];
+            $pageObject->name = $page['pagesname'];
+            $pageObject->content = $page['pagescontent'];
+            $pageObject->parentPage = $page['pagesparentpage'];
+            $pageObject->keywords = $page['pageskeywords'];
+            $pageObject->sorting = $page['pagessorting'];
+            $pageObject->sorting = $page['pagesishome'];
+            $pageObject->created = $page['pagescreated'];
+            $pageObject->modified = $page['pagesmodified'];
+            $pageObject->creatorId = $page['pagescreaterid'];
+            $pageObject->modifierId = $page['pagesmodifierid'];
             array_push($pageObjects, $pageObject);
         }
     }
