@@ -20,8 +20,8 @@ function elm_Data_InitializeDb(){
         include_once "MariaDb/initializeMariaDB.php";
         initializeMariaDB();
     } else if ($elm_Settings_ConnectionHost == "pgsql"){
-        include_once "Postgresql/iniitalizePostgresqlDB.php";
-        iniitalizePostgresqlDB();
+        include_once "Postgresql/initializePostgresqlDB.php";
+        initializePostgresqlDB();
     }
 }
 
