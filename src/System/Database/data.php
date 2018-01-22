@@ -132,7 +132,7 @@ function elm_Data_GetUsers(){
     GLOBAL $conn;
     $elmUsers = array();
     $sql = $conn->prepare("SELECT * FROM elm_users 
-              WHERE isActive = 1;");
+              WHERE isActive = TRUE;");
     if($sql->execute()){
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
             array_push($elmUsers, $row);
@@ -175,7 +175,7 @@ function elm_Data_CreateUser($userName, $password, $email, $roleID){
     $roleID = stripslashes($roleID);
     $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isActive, role_FK) 
               VALUES 
-              (?, ?, ?, 1, ?)");
+              (?, ?, ?, TRUE, ?);");
     $sql->bindParam(1, $name);
     $sql->bindParam(2, $password);
     $sql->bindParam(3, $email);
@@ -206,7 +206,7 @@ function elm_Data_login_User($userName, $password, $verify){
         $password = hash('sha512', $password);
         // SQL query to fetch information of registered users and finds user match.
         $sql = $conn->prepare("SELECT usersID FROM elm_users 
-                  WHERE username LIKE ? AND password LIKE ?;");
+                  WHERE username = ? AND password = ?;");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
         if($sql->execute()){
@@ -220,10 +220,9 @@ function elm_Data_login_User($userName, $password, $verify){
                 $_SESSION['login_failure'] = 'true';
             }
         }
-        else{
+        else {
             $_SESSION['login_failure'] = 'true';
         }
-
     }
     return true;
 }
@@ -350,17 +349,30 @@ function elm_Data_GetPages(){
     $pageObjects = array();
     foreach ($pages as $page) {
         $pageObject = new elm_Page();
-        $pageObject->id = $page['pagesID'];
-        $pageObject->name = $page['pagesName'];
-        $pageObject->content = $page['pagesContent'];
-        $pageObject->parentPage = $page['pagesParentPage'];
-        $pageObject->keywords = $page['pagesKeywords'];
-        $pageObject->sorting = $page['pagesSorting'];
-        $pageObject->sorting = $page['pagesIsHome'];
-        $pageObject->created = $page['pagesCreated'];
-        $pageObject->modified = $page['pagesModified'];
-        $pageObject->creatorId = $page['pagesCreaterID'];
-        $pageObject->modifierId = $page['pagesModifierID'];
+        $pageObject->id = $page['pagesid'];
+        $pageObject->name = $page['pagesname'];
+        $pageObject->content = $page['pagescontent'];
+        $pageObject->parentPage = $page['pagesparentpage'];
+        $pageObject->keywords = $page['pageskeywords'];
+        $pageObject->sorting = $page['pagessorting'];
+        $pageObject->sorting = $page['pagesishome'];
+        $pageObject->created = $page['pagescreated'];
+        $pageObject->modified = $page['pagesmodified'];
+        $pageObject->creatorId = $page['pagescreaterid'];
+        $pageObject->modifierId = $page['pagesmodifierid'];
+
+        /* $pageObject->id = $page->pagesID;
+         $pageObject->name = $page->pagesName;
+         $pageObject->content = $page->pagesContent;
+         $pageObject->parentPage = $page->pagesParentPage;
+         $pageObject->keywords = $page->pagesKeywords;
+         $pageObject->sorting = $page->pagesSorting;
+         $pageObject->sorting = $page->pagesIsHome;
+         $pageObject->created = $page->pagesCreated;
+         $pageObject->modified = $page->pagesModified;
+         $pageObject->creatorId = $page->pagesCreaterID;
+         $pageObject->modifierId = $page->pagesModifierID;*/
+
         array_push($pageObjects, $pageObject);
     }
     return $pageObjects;
@@ -437,14 +449,13 @@ function elm_Data_DeletePages($pageID){
  */
 function elm_Data_GetRoleId($roleName){
     GLOBAL $conn;
-    echo $roleName;
     $id = array();
     $sql = $conn->prepare("SELECT roleID FROM elm_role 
-              WHERE roleName LIKE ?;");
-    $sql->bindParam(1, $roleName);
+              WHERE roleName = ?;");
+    $sql->bindParam(1, $roleName, PDO::PARAM_STR);
+
     if ($sql->execute()){
-        $rows = $sql->fetch(PDO::FETCH_OBJ);
-        $id = $rows->roleID;
+        $id = $sql->fetch(PDO::FETCH_OBJ)->roleid;
     }
     return $id;
 }
