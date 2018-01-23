@@ -2,14 +2,13 @@
     //load users and roles form db
     $users = elm_Data_GetUsers();
     $roles = elm_Data_GetRole();
-    
+
     //create roleMap: key-> roleID, value-> roleName
     //used to display roleName in Table
     $roleMap = array();
     foreach ($roles as $role){
         $roleMap[$role['roleid']] = $role['rolename'];
     }
-
 ?>
 <h1>User Management</h1>
 </br>
