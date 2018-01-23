@@ -29,8 +29,8 @@ function initializeMariaDB(){
 
     $sql = $conn->prepare("CREATE TABLE `elm_role` (
               `roleid` int(11) NOT NULL,
-              `roleName` varchar(255) NOT NULL,
-              `roleDescription` text,
+              `rolename` varchar(255) NOT NULL,
+              `roledescription` text,
               `rolecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `rolemodified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `rolecreaterid` int(11),
@@ -54,8 +54,8 @@ function initializeMariaDB(){
 
     $sql = $conn->prepare("CREATE TABLE `elm_setting` (
              `settingsid` int(11) NOT NULL,
-             `settingsKey` varchar(255) NOT NULL,
-             `settingsValue` varchar(255) NOT NULL,
+             `settingskey` varchar(255) NOT NULL,
+             `settingsvalue` varchar(255) NOT NULL,
              `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
              `settingsmodifierid` int(11)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
@@ -77,8 +77,8 @@ function initializeMariaDB(){
 
     $sql = $conn->prepare("CREATE TABLE `elm_version` (
               `versionid` int(11) NOT NULL,
-              `databaseVersion` varchar(255) NOT NULL,
-              `scriptName` varchar(255) NOT NULL,
+              `databaseversion` varchar(255) NOT NULL,
+              `scriptname` varchar(255) NOT NULL,
               `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     $sql->execute();
