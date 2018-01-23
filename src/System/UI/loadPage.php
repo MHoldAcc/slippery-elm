@@ -40,7 +40,7 @@ function elm_Page_Load()
     eval('?>' . $elm_Page_HTML . '<?php');
 }
 
-/**
+/**elm_Page_Load
  * Replaces any text placeholder in html construct with given value
  * @param $placeholder The placeholder to replace
  * @param $value The value to set
