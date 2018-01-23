@@ -12,14 +12,14 @@ function initializeMariaDB(){
               `pagesid` int(11) NOT NULL,
               `pagesname` varchar(255) NOT NULL,
               `pagescontent` text NOT NULL,
-              `pagesparentpage` varchar(255) NOT NULL,
-              `pageskeywords` varchar(255) NOT NULL,
-              `pagessorting` int(11) NOT NULL,
+              `pagesparentpage` varchar(255),
+              `pageskeywords` varchar(255),
+              `pagessorting` int(11),
               `pagesishome` tinyint(1),
               `pagescreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `pagesmodified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              `pagescreaterid` int(11) NOT NULL,
-              `pagesmodifierid` int(11) NOT NULL
+              `pagescreaterid` int(11),
+              `pagesmodifierid` int(11)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     $sql->execute();
 
@@ -30,11 +30,11 @@ function initializeMariaDB(){
     $sql = $conn->prepare("CREATE TABLE `elm_role` (
               `roleid` int(11) NOT NULL,
               `roleName` varchar(255) NOT NULL,
-              `roleDescription` text NOT NULL,
+              `roleDescription` text,
               `rolecreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `rolemodified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              `rolecreaterid` int(11) NOT NULL,
-              `rolemodifierid` int(11) NOT NULL
+              `rolecreaterid` int(11),
+              `rolemodifierid` int(11)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     $sql->execute();
 
@@ -57,7 +57,7 @@ function initializeMariaDB(){
              `settingsKey` varchar(255) NOT NULL,
              `settingsValue` varchar(255) NOT NULL,
              `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-             `settingsmodifierid` int(11) NOT NULL
+             `settingsmodifierid` int(11)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     $sql->execute();
 
@@ -69,8 +69,8 @@ function initializeMariaDB(){
               `isactive` tinyint(1),
               `userscreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
               `usersmodified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              `userscreaterid` int(11) NOT NULL,
-              `usersmodifierid` int(11) NOT NULL,
+              `userscreaterid` int(11),
+              `usersmodifierid` int(11),
               `role_fk` int(11) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
     $sql->execute();

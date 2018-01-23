@@ -282,18 +282,17 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
  * pagesModifierID int(11) NOT NULL
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
-function elm_Data_AdminUpdatePage($pageID, $pageName, $title, $parentPage, $content, $keywords, $sorting){
+function elm_Data_AdminUpdatePage($pageID, $title, $content, $parentPage, $keywords, $sorting){
     GLOBAL $conn;
     $sql = $conn->prepare("UPDATE elm_pages 
-              SET pagesname = ?,pagesparentpage = ?,pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
+              SET pagesname = ?, pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
               WHERE pagesid = ?;");
-    $sql->bindParam(1, $pageName);
-    $sql->bindParam(2, $title);
-    $sql->bindParam(3, $content);
-    $sql->bindParam(4, $parentPage);
-    $sql->bindParam(5, $keywords);
-    $sql->bindParam(6, $sorting);
-    $sql->bindParam(7, $pageID);
+    $sql->bindParam(1, $title);
+    $sql->bindParam(2, $content);
+    $sql->bindParam(3, $parentPage);
+    $sql->bindParam(4, $keywords);
+    $sql->bindParam(5, $sorting);
+    $sql->bindParam(6, $pageID);
     $sql->execute();
 }
 
