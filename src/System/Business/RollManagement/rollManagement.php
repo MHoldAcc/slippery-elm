@@ -10,7 +10,7 @@ function elm_RollManagement_isRollUnique($rollName){
     $rolls = elm_Data_GetRole();
 
     foreach($rolls as $roll){
-        if ($roll['roleName'] == $rollName){
+        if ($roll['rolename'] == $rollName){
             return false;
         }
     }
@@ -32,8 +32,8 @@ function elm_Page_RollManagementFunctionality(){
         //validate inputs and if valid -> Store new roll
         if (isset($_POST['elm_AddRoll_Name']) && isset($_POST['elm_AddRoll_Description'])) {
             if (elm_RollManagement_isRollUnique($_POST['elm_AddRoll_Name']) === true) {
-                //elm_Data_CreateRole($_POST['elm_AddRoll_Name'], $_POST['elm_AddRoll_Description'])
-                header("Location: index.php?page=elm_RollManagement");
+                elm_Data_CreateRole($_POST['elm_AddRoll_Name'], $_POST['elm_AddRoll_Description']);
+                //header("Location: index.php?page=elm_RollManagement");
             }
             else {
                 //TODO: error handling

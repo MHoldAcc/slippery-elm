@@ -24,12 +24,12 @@
             //$assignedUsers = elm_Data_AssignmentRole($role['roleID']);
             $assignedUsers = array();
             echo "<tr>".
-                    "<td>".$role['roleName']."</td>".
-                    "<td>".$role['roleDescription'] ."</td>".
+                    "<td>".$role['rolename']."</td>".
+                    "<td>".$role['roledescription'] ."</td>".
                     "<td>".count($assignedUsers)." User(s)</td>".
                     "<td>".
                         // don't allow roll deletion if users are assigned
-                        (count($assignedUsers) == 0 ? "<a class=\"content_link\" href='index.php?id=".$role['roleID']."&deleteRoll_admin'>Löschen</a> " : "-").
+                        (count($assignedUsers) == 0 ? "<a class=\"content_link\" href='index.php?id=".$role['roleid']."&deleteRoll_admin'>Löschen</a> " : "-").
                     "</td>".
                 "</tr>";
         }

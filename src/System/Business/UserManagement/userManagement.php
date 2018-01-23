@@ -12,7 +12,7 @@ function elm_UserManagement_isUsernameUnique($username, $id=null){
 
     foreach($users as $user){
         if ($user['username'] == $username){
-            if ($user['usersID'] == $id) {
+            if ($user['usersid'] == $id) {
                 return true;
             }
             else {
