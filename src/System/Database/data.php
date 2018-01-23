@@ -212,7 +212,9 @@ function elm_Data_login_User($userName, $password, $verify){
                 $_SESSION['login_user'] = $name; // Initializing Session
                 $row = $sql->fetch(PDO::FETCH_OBJ);
                 $_SESSION['login_user_id'] = $row->usersid;
+                $_SESSION['login_role_fk'] = '1';
                 $_SESSION['login_failure'] = 'false';
+
             } else {
                 $_SESSION['login_failure'] = 'true';
             }

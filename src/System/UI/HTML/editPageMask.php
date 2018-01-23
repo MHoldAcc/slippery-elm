@@ -1,5 +1,9 @@
 <?php
 $page = elm_Data_GetSpecificPages($_GET['id']);
+
+/**
+ * Formular for create a page. "save"-Button triggers pageManagement.
+ * */
 ?>
 <h1>Seite bearbeiten</h1>
 </br></br>
