@@ -7,9 +7,8 @@
     //used to display roleName in Table
     $roleMap = array();
     foreach ($roles as $role){
-        $roleMap[$role['roleID']] = $role['roleName'];
+        $roleMap[$role['roleid']] = $role['rolename'];
     }
-
 ?>
 <h1>User Management</h1>
 </br>
@@ -32,12 +31,12 @@
             echo "<tr>".
                     "<td>".$user['username']."</td>".
                     "<td>".$user['email'] ."</td>".
-                    "<td>".$roleMap[$user['role_FK']]."</td>".
+                    "<td>".$roleMap[$user['role_fk']]."</td>".
                     "<td>".
-                        "<a class=\"content_link\" href='index.php?id=".$user['usersID']."&editUser_admin'>Editieren</a>".
+                        "<a class=\"content_link\" href='index.php?id=".$user['usersid']."&editUser_admin'>Editieren</a>".
                     "</td>".
                     "<td>".
-                        "<a class=\"content_link\" href='index.php?id=".$user['usersID']."&deleteUser_admin'>Löschen</a> ".
+                        "<a class=\"content_link\" href='index.php?id=".$user['usersid']."&deleteUser_admin'>Löschen</a> ".
                     "</td>".
                 "</tr>";
         }

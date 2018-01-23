@@ -27,7 +27,7 @@
                     <?php
                         // create option for each role
                         foreach($roles as $role){
-                            echo "<option value=\"".$role['roleID']."\">".$role['roleName']."</option>";
+                            echo "<option value=\"".$role['roleid']."\">".$role['rolename']."</option>";
                         }
                     ?>
                 </select>
