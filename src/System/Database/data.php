@@ -319,8 +319,8 @@ function elm_Data_AdminUpdatePage($pageID, $pageName, $title, $parentPage, $cont
 function elm_Data_UpdatePageContent($pageID, $content){
     GLOBAL $conn;
     $sql = $conn->prepare("UPDATE elm_pages 
-              SET pagescontent = ".$content." 
-              WHERE pagesid = ".$pageID.";");
+              SET pagescontent = ? 
+              WHERE pagesid = ?;");
     $sql->bindParam(1, $content);
     $sql->bindParam(2, $pageID);
     $sql->execute();
