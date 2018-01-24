@@ -4,7 +4,7 @@
          * Checks if the user is an admin
          * */
         if ($_SESSION['login_role_fk'] == 1) {
-            echo "<h1>Adminpage</h1>";
+            echo "<h1>Adminpage</h1><p>Admin Settings coming in next Release of Slippery elm!</p>";
         } else {
             echo "You have no permissions to see this page.<br>";
             echo $_SESSION['login_role_fk'];
