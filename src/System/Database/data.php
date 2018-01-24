@@ -172,16 +172,23 @@ function elm_Data_CreateUser($userName, $password, $email, $roleID){
     $password = hash('sha512', $password);
     $email = stripslashes($email);
     $roleID = stripslashes($roleID);
-    $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isactive, role_fk) 
+
+    $sql = $conn->prepare("SELECT * FROM elm_users WHERE username = ?;");
+    $sql->bindParam(1, $name);
+
+    if ($sql->execute() && $sql->rowCount() == 0){
+        $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isactive, role_fk) 
               VALUES 
               (?, ?, ?, TRUE, ?);");
-    $sql->bindParam(1, $name);
-    $sql->bindParam(2, $password);
-    $sql->bindParam(3, $email);
-    $sql->bindParam(4, $roleID);
-    if ($sql->execute()){
-        $created = true;
+        $sql->bindParam(1, $name);
+        $sql->bindParam(2, $password);
+        $sql->bindParam(3, $email);
+        $sql->bindParam(4, $roleID);
+        if ($sql->execute()){
+            $created = true;
+        }
     }
+
     return $created;
 }
 

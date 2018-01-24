@@ -49,7 +49,7 @@ function elm_Page_UserManagementFunctionality(){
                     header("Location: index.php?page=elm_UserManagement");
                 } else {
                     //TODO: error handling
-                    echo "error";
+                    header("Location: index.php?page=elm_UserManagement");
                 }
             }
             else {
