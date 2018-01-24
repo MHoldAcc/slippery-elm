@@ -212,7 +212,9 @@ function elm_Data_login_User($userName, $password, $verify){
                 $_SESSION['login_user'] = $name; // Initializing Session
                 $row = $sql->fetch(PDO::FETCH_OBJ);
                 $_SESSION['login_user_id'] = $row->usersid;
+                $_SESSION['login_role_fk'] = '1';
                 $_SESSION['login_failure'] = 'false';
+
             } else {
                 $_SESSION['login_failure'] = 'true';
             }
@@ -510,8 +512,8 @@ function elm_Data_AssignmentRole($roleId){
     GLOBAL $conn;
     $roleId = stripslashes($roleId);
     $roles = array();
-    $sql = $conn->prepare("SELECT * FROM elm_role
-              WHERE roleid = ?;");
+    $sql = $conn->prepare("SELECT * FROM elm_users
+              WHERE role_fk = ?;");
     $sql->bindParam(1, $roleId);
     $sql->execute();
     while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {

@@ -1,3 +1,8 @@
+<?php
+/**
+ * This is the Mask for editing a page. If "save" is used the formular is saved in pageManagement.
+ * */
+?>
 <h1>Seite bearbeiten</h1>
 </br></br>
 

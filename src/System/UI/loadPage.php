@@ -120,7 +120,7 @@ function elm_Page_GetAllPages()
         //Adds Admin Page
         $adminpage = new elm_Page();
         $adminpage->id = 'elm_Admin';
-        $adminpage->content = file_get_contents('System/UI/HTML/adminPage.html', FILE_USE_INCLUDE_PATH);
+        $adminpage->content = file_get_contents('System/UI/HTML/adminPage.php', FILE_USE_INCLUDE_PATH);
         $adminpage->name = 'Admin';
         $adminpage->sorting = 9900;
         array_push($pages, $adminpage);

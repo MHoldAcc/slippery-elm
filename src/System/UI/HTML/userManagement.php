@@ -18,7 +18,7 @@
 </br></br>
 
 <table class="userMgmt_table">
-    <tr>
+    <tr style="font-weight: bold">
         <td>Username</td>
         <td>E-Mail</td>
         <td>Rolle</td>
