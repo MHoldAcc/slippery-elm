@@ -512,8 +512,8 @@ function elm_Data_AssignmentRole($roleId){
     GLOBAL $conn;
     $roleId = stripslashes($roleId);
     $roles = array();
-    $sql = $conn->prepare("SELECT * FROM elm_role
-              WHERE roleid = ?;");
+    $sql = $conn->prepare("SELECT * FROM elm_users
+              WHERE role_fk = ?;");
     $sql->bindParam(1, $roleId);
     $sql->execute();
     while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
