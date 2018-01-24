@@ -88,12 +88,58 @@ function elm_Page_LoginFunctionality()
 function elm_Page_CreateMenu(){
     global $elm_Page_NavBar;
     $menuContent = '';
-    foreach (elm_Page_GetAllPages() as $page){
-        $menuContent = $menuContent . '<a href="index.php?page='. $page->id . '"';
-        if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
+    $allPages = elm_Page_GetAllPages();
+    foreach ($allPages as $page){
+        if(!isset($page->parentPage) || strlen(str_replace(' ', '', $page->parentPage)) == 0){
+            $currentId = $page->id;
+            $menuContent = $menuContent . '<div class="dropdown-'. $currentId .'"><a class="dropbtn-' . $currentId . '" href="index.php?page='. $page->id . '">' . $page->name . '</a> <div class="dropdown-content-'. $currentId . '">';
+            foreach ($allPages as $subpage){
+                if(isset($subpage->parentPage) && $page->id == $subpage->parentPage){
+                    $menuContent = $menuContent. '<a href="index.php?page=' . $subpage->id . '">' . $subpage->name . '</a>';
+                }
+            }
+            $menuContent = $menuContent . '</div></div>';
+
+            //Adds styling to menu so dropdown works
             $menuContent = $menuContent .
-                elm_Page_SetCurrentPage($page);
-        }$menuContent = $menuContent . '>'. $page->name .'</a>';
+                '<style>
+                    .dropbtn-'.$currentId.' {
+                        padding: 16px;
+                        font-size: 16px;
+                        border: none;
+                        margin-bottom: 50px;
+                    }
+                
+                    .dropdown-'. $currentId .' {
+                        display: inline-block;
+                    }
+                   
+                    .dropdown-content-'.$currentId.' {
+                        display: none;
+                        position: absolute;
+                        min-width: 50px;
+                        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                        background-color: #333;
+                        z-index: 1;
+                        margin-top: 50px;
+                    }
+                
+                    .dropdown-content-'.$currentId.' a {
+                        padding: 12px 16px;
+                        text-decoration: none;
+                        display: block;
+                    }
+                
+                    .dropdown-'. $currentId .':hover .dropdown-content-'.$currentId.' {
+                        display: block;
+                    }
+                </style>';
+
+        }
+        //Sets page content if current page is in loop
+        if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
+            elm_Page_SetCurrentPage($page);
+        }
     }
     $elm_Page_NavBar = $menuContent;
 }
