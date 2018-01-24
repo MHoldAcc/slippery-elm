@@ -33,7 +33,7 @@ function elm_Page_RollManagementFunctionality(){
         if (isset($_POST['elm_AddRoll_Name']) && isset($_POST['elm_AddRoll_Description'])) {
             if (elm_RollManagement_isRollUnique($_POST['elm_AddRoll_Name']) === true) {
                 elm_Data_CreateRole($_POST['elm_AddRoll_Name'], $_POST['elm_AddRoll_Description']);
-                //header("Location: index.php?page=elm_RollManagement");
+                header("Location: index.php?page=elm_RollManagement");
             }
             else {
                 //TODO: error handling
@@ -46,10 +46,9 @@ function elm_Page_RollManagementFunctionality(){
     }
     else if (isset($_GET['deleteRoll_admin']) && isset($_GET['id'])){
         //allow roll deletion only if no users are assigned
-        //$assignedUsers = elm_Data_AssignmentRole($_GET['id']);
-        $assignedUsers = array(2);
+        $assignedUsers = elm_Data_AssignmentRole($_GET['id']);
         if (count($assignedUsers) == 0){
-            //elm_Data_DeleteRole($_GET['id']);
+            elm_Data_DeleteRole($_GET['id']);
             header("Location: index.php?page=elm_RollManagement");
         }
         else {
