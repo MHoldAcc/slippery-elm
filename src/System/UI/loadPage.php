@@ -4,7 +4,7 @@ include_once("System/Business/Login/login.php");
 include_once("System/Business/User/user.php");
 include_once("System/Business/UserManagement/userManagement.php");
 include_once("System/Business/PageManagement/pageManagement.php");
-include_once("System/Business/RollManagement/rollManagement.php");
+include_once("System/Business/RoleManagement/roleManagement.php");
 
 /**
  * Loads and prints the content of the current webpage
@@ -33,7 +33,7 @@ function elm_Page_Load()
 
     elm_Page_PageManagementFunctionality();
 
-    elm_Page_RollManagementFunctionality();
+    elm_Page_RoleManagementFunctionality();
 
     elm_Page_ReplaceAllPlaceholders();
 
@@ -134,14 +134,14 @@ function elm_Page_GetAllPages()
         $userMgmtPage->sorting = 9910;
         array_push($pages, $userMgmtPage);
 
-        //Adds Roll Management Page
-        $rollMgmtPage = new elm_Page();
-        $rollMgmtPage->id = "elm_RollManagement";
-        $rollMgmtPage->content = file_get_contents('System/UI/HTML/rollManagement.php', FILE_USE_INCLUDE_PATH);
-        $rollMgmtPage->name = "Roll Management";
-        $rollMgmtPage->parentPage = 'elm_Admin';
-        $rollMgmtPage->sorting = 9920;
-        array_push($pages, $rollMgmtPage);
+        //Adds Role Management Page
+        $roleMgmtPage = new elm_Page();
+        $roleMgmtPage->id = "elm_RoleManagement";
+        $roleMgmtPage->content = file_get_contents('System/UI/HTML/roleManagement.php', FILE_USE_INCLUDE_PATH);
+        $roleMgmtPage->name = "Role Management";
+        $roleMgmtPage->parentPage = 'elm_Admin';
+        $roleMgmtPage->sorting = 9920;
+        array_push($pages, $roleMgmtPage);
 
         //Adds Edit Page
         $editPage = new elm_Page();

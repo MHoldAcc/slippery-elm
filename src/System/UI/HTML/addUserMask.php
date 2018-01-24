@@ -23,7 +23,7 @@
         <tr>
             <td><label>Rolle: </label></td>
             <td>
-                <select id="elm_AddUser_Roll" name="elm_AddUser_Roll">
+                <select id="elm_AddUser_Role" name="elm_AddUser_Role">
                     <?php
                         // create option for each role
                         foreach($roles as $role){

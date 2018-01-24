@@ -3,14 +3,14 @@
     $roles = elm_Data_GetRole();
 
 ?>
-<h1>Roll Management</h1>
+<h1>Role Management</h1>
 </br>
 
-<a class="content_link" href="index.php?addRoll_admin" >Neue Rolle hinzufügen</a>
+<a class="content_link" href="index.php?addRole_admin" >Neue Rolle hinzufügen</a>
 
 </br></br>
 
-<table class="rollMgmt_table">
+<table class="roleMgmt_table">
     <tr style="font-weight: bold">
         <td>Name</td>
         <td>Description</td>
@@ -27,8 +27,8 @@
                     "<td>".$role['roledescription'] ."</td>".
                     "<td>".count($assignedUsers)." User(s)</td>".
                     "<td>".
-                        // don't allow roll deletion if users are assigned
-                        (count($assignedUsers) == 0 ? "<a class=\"content_link\" href='index.php?id=".$role['roleid']."&deleteRoll_admin'>Löschen</a> " : "-").
+                        // don't allow role deletion if users are assigned
+                        (count($assignedUsers) == 0 ? "<a class=\"content_link\" href='index.php?id=".$role['roleid']."&deleteRole_admin'>Löschen</a> " : "-").
                     "</td>".
                 "</tr>";
         }
