@@ -37,7 +37,7 @@ function elm_Page_PageManagementFunctionality() {
          **/
          if (isset($_POST['elm_EditPage_Titel']) && isset($_POST['elm_EditPage_Keyword']) && isset($_POST['elm_EditPage_Sorting']) && isset($_POST['elm_EditPage_Content']) && isset($_POST['elm_EditPage_Id'])) {
             elm_Data_AdminUpdatePage($_POST['elm_EditPage_Id'], $_POST['elm_EditPage_Titel'], $_POST['elm_EditPage_Content'], $_POST['elm_EditPage_parentPage'], $_POST['elm_EditPage_Keyword'], $_POST['elm_EditPage_Sorting']);
-            header("Location: index.php?page=elm_elm_Admin_EditPage");
+            header("Location: index.php?page=elm_Page_Edit");
         }
         else {
             //TODO: error handling

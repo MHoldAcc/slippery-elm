@@ -177,12 +177,16 @@ function elm_Page_GetAllPages()
 function elm_Page_GetCurrentPageId()
 {
     if (isset($_SESSION['elm_Pages_CurrentPageId'])) {
+        $_SESSION['elm_Pages_LastPageId'] = $_SESSION['elm_Pages_CurrentPageId'];
         if (isset($_GET["page"])) {
-            $_SESSION['elm_Pages_LastPageId'] = $_SESSION['elm_Pages_CurrentPageId'];
             $_SESSION['elm_Pages_CurrentPageId'] = $_GET["page"];
         }
-    } else
-        $_SESSION['elm_Pages_CurrentPageId'] = 0;
+        else{
+            $_SESSION['elm_Pages_CurrentPageId'] = 1;
+        }
+    } else{
+        $_SESSION['elm_Pages_CurrentPageId'] = 1;
+    }
 }
 
 /**
