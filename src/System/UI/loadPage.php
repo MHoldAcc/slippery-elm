@@ -193,7 +193,7 @@ function elm_Page_GetAllPages()
         $editPage = new elm_Page();
         $editPage->id = 'elm_Page_Edit';
         $editPage->content = file_get_contents('System/UI/HTML/editPage.php', FILE_USE_INCLUDE_PATH);
-        $editPage->name = 'Seite bearbeiten';
+        $editPage->name = 'Edit Pages';
         $editPage->parentPage = 'elm_Admin';
         $editPage->sorting = 9930;
         array_push($pages, $editPage);

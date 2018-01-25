@@ -7,7 +7,6 @@
             echo "<h1>Adminpage</h1><p>Admin Settings coming in next Release of Slippery elm!</p>";
         } else {
             echo "You have no permissions to see this page.<br>";
-            echo $_SESSION['login_role_fk'];
         }
     } else {
         echo "You must be logged in to see this content.";

@@ -209,7 +209,7 @@ function elm_Data_login_User($userName, $password, $verify){
         $name = stripslashes($name);
         $password = stripslashes($password);
         $password = hash('sha512', $password);
-        $sql = $conn->prepare("SELECT usersid FROM elm_users 
+        $sql = $conn->prepare("SELECT usersid, role_fk FROM elm_users 
                   WHERE username = ? AND password = ?;");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
@@ -219,7 +219,7 @@ function elm_Data_login_User($userName, $password, $verify){
                 $_SESSION['login_user'] = $name; // Initializing Session
                 $row = $sql->fetch(PDO::FETCH_OBJ);
                 $_SESSION['login_user_id'] = $row->usersid;
-                $_SESSION['login_role_fk'] = '1';
+                $_SESSION['login_role_fk'] = $row->role_fk;
                 $_SESSION['login_failure'] = 'false';
 
             } else {

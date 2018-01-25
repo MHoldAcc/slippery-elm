@@ -12,12 +12,19 @@ $elm_Settings_ConnectionString = "localhost";
 /**
  * This variable is used to tell the connection with which user to connect
  */
-$elm_Settings_DbUser = "postgres";
+$elm_Settings_DbUser = "postgres"; //root
+
+/**
+ * This variable is used to tell the connection to which port to connect
+ */
+/*
+ * $elm_Settings_Port = "3306";
+ */
 
 /**
  * This variable is used to tell the connection with which password the user uses identify himself to the server and the database
  */
-$elm_Settings_DbPassword = "1234";
+$elm_Settings_DbPassword = "1234"; // ""
 
 /**
  * This variable tells the connection string to which database to use
