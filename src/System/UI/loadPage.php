@@ -163,32 +163,34 @@ function elm_Page_GetAllPages()
     $pages = elm_Data_GetPages();
 
     if (elm_Login_IsLoggedIn()) {
-        //Adds Admin Page
-        $adminpage = new elm_Page();
-        $adminpage->id = 'elm_Admin';
-        $adminpage->content = file_get_contents('System/UI/HTML/adminPage.php', FILE_USE_INCLUDE_PATH);
-        $adminpage->name = 'Admin';
-        $adminpage->sorting = 9900;
-        array_push($pages, $adminpage);
 
-        //Adds User Management Page
-        $userMgmtPage = new elm_Page();
-        $userMgmtPage->id = "elm_UserManagement";
-        $userMgmtPage->content = file_get_contents('System/UI/HTML/userManagement.php', FILE_USE_INCLUDE_PATH);
-        $userMgmtPage->name = "User Management";
-        $userMgmtPage->parentPage = 'elm_Admin';
-        $userMgmtPage->sorting = 9910;
-        array_push($pages, $userMgmtPage);
+        if ($_SESSION['login_role_fk'] == 1) {
+            //Adds Admin Page
+            $adminpage = new elm_Page();
+            $adminpage->id = 'elm_Admin';
+            $adminpage->content = file_get_contents('System/UI/HTML/adminPage.php', FILE_USE_INCLUDE_PATH);
+            $adminpage->name = 'Admin';
+            $adminpage->sorting = 9900;
+            array_push($pages, $adminpage);
 
-        //Adds Role Management Page
-        $roleMgmtPage = new elm_Page();
-        $roleMgmtPage->id = "elm_RoleManagement";
-        $roleMgmtPage->content = file_get_contents('System/UI/HTML/roleManagement.php', FILE_USE_INCLUDE_PATH);
-        $roleMgmtPage->name = "Role Management";
-        $roleMgmtPage->parentPage = 'elm_Admin';
-        $roleMgmtPage->sorting = 9920;
-        array_push($pages, $roleMgmtPage);
+            //Adds User Management Page
+            $userMgmtPage = new elm_Page();
+            $userMgmtPage->id = "elm_UserManagement";
+            $userMgmtPage->content = file_get_contents('System/UI/HTML/userManagement.php', FILE_USE_INCLUDE_PATH);
+            $userMgmtPage->name = "User Management";
+            $userMgmtPage->parentPage = 'elm_Admin';
+            $userMgmtPage->sorting = 9910;
+            array_push($pages, $userMgmtPage);
 
+            //Adds Role Management Page
+            $roleMgmtPage = new elm_Page();
+            $roleMgmtPage->id = "elm_RoleManagement";
+            $roleMgmtPage->content = file_get_contents('System/UI/HTML/roleManagement.php', FILE_USE_INCLUDE_PATH);
+            $roleMgmtPage->name = "Role Management";
+            $roleMgmtPage->parentPage = 'elm_Admin';
+            $roleMgmtPage->sorting = 9920;
+            array_push($pages, $roleMgmtPage);
+        }
         //Adds Edit Page
         $editPage = new elm_Page();
         $editPage->id = 'elm_Page_Edit';
