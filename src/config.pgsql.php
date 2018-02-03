@@ -27,5 +27,5 @@ $elm_Settings_Db = "slippery_elm";
 /**
  * This variable is used to tel the PDO function which data source name to use, which is a concatanated sting, containing the information of $elm_Settings_ConnectionHost, $elm_Settings_ConnectionString and $elm_Settings_Db
  */
-$elm_Settings_DSN = $elm_Settings_ConnectionHost.":host=".$elm_Settings_ConnectionString.";port=5432;dbname=".$elm_Settings_Db;
+$elm_Settings_DSN = $elm_Settings_ConnectionHost.":host=".$elm_Settings_ConnectionString.";dbname=".$elm_Settings_Db;
 ?>
