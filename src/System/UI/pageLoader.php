@@ -68,20 +68,20 @@ class elm_PageLoader {
         /**
          * Executes login if needed
          */
-        else if (isset($_POST['elm_Login_Execute'])) {
+        if (isset($_POST['elm_Login_Execute'])) {
             elm_LoginFunctionality::executeLogin($_POST['elm_Login_Username'], $_POST['elm_Login_Password'], $_POST['elm_Login_Password']);
         }
 
         /**
          * Executes logout if needed
          */
-        else if (isset($_GET['logout']))
+        if (isset($_GET['logout']))
             elm_LoginFunctionality::executeLogout();
 
         /**
          * Gets triggered after "add new page" is clicked
          */
-        else if (isset($_GET['addPage_admin'])){
+        if (isset($_GET['addPage_admin'])){
             $this->currentPage = new elm_Page();
             $this->currentPage -> name = 'Add Page';
             $this->currentPage -> id = 'elm_Admin_AddPage';
@@ -91,7 +91,7 @@ class elm_PageLoader {
         /**
          * Gets triggered after "edit page" is clicked
          * */
-        else if (isset($_GET['editPage_admin']) && isset($_GET['id'])){
+        if (isset($_GET['editPage_admin']) && isset($_GET['id'])){
             $this->currentPage = new elm_Page();
             $this->currentPage -> name = 'Edit Page';
             $this->currentPage -> id = 'elm_Admin_EditPage';
@@ -101,7 +101,7 @@ class elm_PageLoader {
         /**
          * Used to edit and save  a page
          */
-        else if (isset($_POST['elm_EditPage_Execute_admin'])){
+        if (isset($_POST['elm_EditPage_Execute_admin'])){
             /**Parameter:
              * $pageID, $pageName, $title, $parentPage, $content, $keywords, $sorting
              **/
@@ -118,7 +118,7 @@ class elm_PageLoader {
         /**
          * Add/create a new page
          */
-        else if (isset($_POST['elm_addPage_Execute_admin'])){
+        if (isset($_POST['elm_addPage_Execute_admin'])){
             if (isset($_POST['elm_addPage_Titel']) && isset($_POST['elm_addPage_Keyword']) && isset($_POST['elm_addPage_Sorting']) && isset($_POST['elm_addPage_Content']) && isset($_POST['elm_addPage_ParentPage'])) {
                 if (elm_Data_CreatePage($_POST['elm_addPage_Titel'], $_POST['elm_addPage_Content'], $_POST['elm_addPage_ParentPage'], $_POST['elm_addPage_Keyword'], $_POST['elm_addPage_Sorting'])) {
                     header("Location: index.php?page=elm_Page_Edit");
@@ -133,7 +133,7 @@ class elm_PageLoader {
         /**
          * Used to delete a page
          */
-        else if (isset($_GET['deletePage_admin']) && isset($_GET['id'])) {
+        if (isset($_GET['deletePage_admin']) && isset($_GET['id'])) {
             if(isset($_GET['id'])) {
                 elm_Data_DeletePages($_GET['id']);
             } else {
@@ -147,7 +147,7 @@ class elm_PageLoader {
         /**
          * Edits current user values
          */
-        else if(isset($_POST['elm_EditUser_Execute'])){
+        if(isset($_POST['elm_EditUser_Execute'])){
             if(elm_UserManager::updateCurrentUser($_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email']))
                 header("Location: index.php");
             else{
@@ -160,7 +160,7 @@ class elm_PageLoader {
         /**
          * Deletes current user
          */
-        else if(isset($_GET['elm_EditUser_DeleteCurrentUser'])){
+        if(isset($_GET['elm_EditUser_DeleteCurrentUser'])){
             if(elm_UserManager::deleteCurrentUser())
                 header("Location: index.php");
             else{
@@ -172,7 +172,7 @@ class elm_PageLoader {
         /**
          * Add/Delete roles
          */
-        else if(isset($_GET['addRole_admin'])){
+        if(isset($_GET['addRole_admin'])){
             if (isset($_POST['elm_NewRole_Execute_admin'])) {
                 if (isset($_POST['elm_AddRole_Name']) && isset($_POST['elm_AddRole_Description'])) {
                     if(elm_RoleManger::addRole($_POST['elm_AddRole_Name'], $_POST['elm_AddRole_Description']))
@@ -197,7 +197,7 @@ class elm_PageLoader {
         /**
          * Deletes a given role
          */
-        else if (isset($_GET['deleteRole_admin']) && isset($_GET['id'])){
+        if (isset($_GET['deleteRole_admin']) && isset($_GET['id'])){
             if (elm_RoleManger::deleteRole($_GET['id'])){
                 header("Location: index.php?page=elm_RoleManagement");
             }
@@ -210,7 +210,7 @@ class elm_PageLoader {
         /**
          * Opens add user page
          */
-        else if(isset($_GET['addUser_admin'])){
+        if(isset($_GET['addUser_admin'])){
             //go to Add UserManagement Page
             $this->currentPage = new elm_Page();
             $this->currentPage -> name = 'Add UserManagement';
@@ -221,7 +221,7 @@ class elm_PageLoader {
         /**
          * Opens edit user page
          */
-        else if (isset($_GET['editUser_admin']) && isset($_GET['id'])){
+        if (isset($_GET['editUser_admin']) && isset($_GET['id'])){
             //go to Edit UserManagement Page
             $elm_Page_CurrentPage = new elm_Page();
             $elm_Page_CurrentPage -> name = 'Edit UserManagement';
@@ -232,7 +232,7 @@ class elm_PageLoader {
         /**
          * Adds new user
          */
-        else if (isset($_POST['elm_NewUser_Execute_admin'])) {
+        if (isset($_POST['elm_NewUser_Execute_admin'])) {
             if (isset($_POST['elm_AddUser_Username']) && isset($_POST['elm_AddUser_Email']) && isset($_POST['elm_AddUser_Password']) && isset($_POST['elm_AddUser_Role'])) {
                 if(elm_UserManager::addUser($_POST['elm_AddUser_Username'], $_POST['elm_AddUser_Password'], $_POST['elm_AddUser_Email'], $_POST['elm_AddUser_Role']))
                     header("Location: index.php?page=elm_UserManagement");
@@ -249,7 +249,7 @@ class elm_PageLoader {
         /**
          * Deletes existing user
          */
-        else if (isset($_GET['deleteUser_admin'])){
+        if (isset($_GET['deleteUser_admin'])){
             //delete UserManagement
             if (isset($_GET['id'])) {
                 if(elm_UserManager::deleteUser($_GET['id']))
@@ -265,6 +265,9 @@ class elm_PageLoader {
             }
         }
 
+        /**
+         * Updates user values
+         */
         if (isset($_POST['elm_EditUser_Execute_admin'])){
             if (isset($_POST['elm_EditUser_Username']) && isset($_POST['elm_EditUser_Email']) && isset($_POST['elm_EditUser_Password']) && isset($_POST['elm_EditUser_Id'])) {
                 if (elm_UserManager::updateUser($_POST['elm_EditUser_Id'], $_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email'])) {
