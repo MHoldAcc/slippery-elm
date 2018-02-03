@@ -3,7 +3,6 @@
 include_once("System/Business/Login/login.php");
 include_once("System/Business/User/user.php");
 include_once("System/Business/UserManagement/userManagement.php");
-include_once("System/Business/PageManagement/pageManagement.php");
 include_once("System/Business/RoleManagement/roleManagement.php");
 
 class elm_PageLoader {
@@ -40,8 +39,6 @@ class elm_PageLoader {
 
         elm_Page_UserManagementFunctionality();
 
-        elm_Page_PageManagementFunctionality();
-
         elm_Page_RoleManagementFunctionality();
 
         $this->replaceAllPlaceholders();
@@ -51,29 +48,106 @@ class elm_PageLoader {
 
     /**elm_Page_Load
      * Replaces any text placeholder in html construct with given value
-     * @param $placeholder The placeholder to replace
-     * @param $value The value to set
+     * @param string $placeholder The placeholder to replace
+     * @param string $value The value to set
      */
     public function replacePlaceholder(string $placeholder, string $value)
     {
         $this->HTML = str_replace($placeholder, $value, $this->HTML);
     }
 
+    /**
+     * Executes specific functions depending on the get and post values given
+     */
     private function checkGetAndPostValues(){
-        //Load login Page if needed
+        /**
+         * Loads login Page if needed
+         */
         if (isset($_GET['login'])) {
             $this->currentPage = new elm_Page();
             $this->currentPage->name = 'Login';
             $this->currentPage->id = 'elm_Login';
             $this->currentPage->content = file_get_contents('System/UI/HTML/loginMask.html', FILE_USE_INCLUDE_PATH);
         }
-        //Execute login if needed
-        if (isset($_POST['elm_Login_Execute'])) {
+
+        /**
+         * Executes login if needed
+         */
+        else if (isset($_POST['elm_Login_Execute'])) {
             elm_LoginFunctionality::executeLogin($_POST['elm_Login_Username'], $_POST['elm_Login_Password'], $_POST['elm_Login_Password']);
         }
-        //Execute logout if needed
-        if (isset($_GET['logout']))
+
+        /**
+         * Executes logout if needed
+         */
+        else if (isset($_GET['logout']))
             elm_LoginFunctionality::executeLogout();
+
+        /**
+         * Gets triggered after "add new page" is clicked
+         */
+        else if (isset($_GET['addPage_admin'])){
+            $this->currentPage = new elm_Page();
+            $this->currentPage -> name = 'Add Page';
+            $this->currentPage -> id = 'elm_Admin_AddPage';
+            $this->currentPage -> content = file_get_contents('System/UI/HTML/addPageMask.php', FILE_USE_INCLUDE_PATH);
+        }
+
+        /**
+         * Gets triggered after "edit page" is clicked
+         * */
+        else if (isset($_GET['editPage_admin']) && isset($_GET['id'])){
+            $this->currentPage = new elm_Page();
+            $this->currentPage -> name = 'Edit Page';
+            $this->currentPage -> id = 'elm_Admin_EditPage';
+            $this->currentPage -> content = file_get_contents('System/UI/HTML/editPageMask.php', FILE_USE_INCLUDE_PATH);
+        }
+
+        /**
+         * Used to edit and save  a page
+         */
+        else if (isset($_POST['elm_EditPage_Execute_admin'])){
+            /**Parameter:
+             * $pageID, $pageName, $title, $parentPage, $content, $keywords, $sorting
+             **/
+            if (isset($_POST['elm_EditPage_Titel']) && isset($_POST['elm_EditPage_Keyword']) && isset($_POST['elm_EditPage_Sorting']) && isset($_POST['elm_EditPage_Content']) && isset($_POST['elm_EditPage_Id'])) {
+                elm_Data_AdminUpdatePage($_POST['elm_EditPage_Id'], $_POST['elm_EditPage_Titel'], $_POST['elm_EditPage_Content'], $_POST['elm_EditPage_parentPage'], $_POST['elm_EditPage_Keyword'], $_POST['elm_EditPage_Sorting']);
+                header("Location: index.php?page=elm_Page_Edit");
+            }
+            else {
+                //TODO: error handling
+                echo "error";
+            }
+        }
+
+        /**
+         * Add/create a new page
+         */
+        else if (isset($_POST['elm_addPage_Execute_admin'])){
+            if (isset($_POST['elm_addPage_Titel']) && isset($_POST['elm_addPage_Keyword']) && isset($_POST['elm_addPage_Sorting']) && isset($_POST['elm_addPage_Content']) && isset($_POST['elm_addPage_ParentPage'])) {
+                if (elm_Data_CreatePage($_POST['elm_addPage_Titel'], $_POST['elm_addPage_Content'], $_POST['elm_addPage_ParentPage'], $_POST['elm_addPage_Keyword'], $_POST['elm_addPage_Sorting'])) {
+                    header("Location: index.php?page=elm_Page_Edit");
+                }
+            }
+            else {
+                //TODO: error handling
+                echo "error";
+            }
+        }
+
+        /**
+         * Used to delete a page
+         */
+        else if (isset($_GET['deletePage_admin']) && isset($_GET['id'])) {
+            if(isset($_GET['id'])) {
+                elm_Data_DeletePages($_GET['id']);
+            } else {
+                //TODO: error handling
+                echo "error";
+            }
+
+            header("Location: index.php?page=elm_Page_Edit");
+        }
     }
 
     /**
