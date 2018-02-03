@@ -39,8 +39,6 @@ class elm_PageLoader {
 
         elm_Page_UserManagementFunctionality();
 
-        elm_Page_RoleManagementFunctionality();
-
         $this->replaceAllPlaceholders();
 
         eval('?>' . $this->HTML . '<?php');
@@ -147,6 +145,41 @@ class elm_PageLoader {
             }
 
             header("Location: index.php?page=elm_Page_Edit");
+        }
+
+        /**
+         * Add/Delete roles
+         */
+        else if(isset($_GET['addRole_admin'])){
+            if (isset($_POST['elm_NewRole_Execute_admin'])) {
+                if (isset($_POST['elm_AddRole_Name']) && isset($_POST['elm_AddRole_Description'])) {
+                    if(elm_RoleManger::addRole($_POST['elm_AddRole_Name'], $_POST['elm_AddRole_Description']))
+                        header("Location: index.php?page=elm_RoleManagement");
+                    else {
+                        //TODO: error handling
+                        echo "error";
+                    }
+                } else {
+                    //TODO: error handling
+                    echo "error";
+                }
+            }
+            else{
+                $this->currentPage = new elm_Page();
+                $this->currentPage -> name = 'Add Role';
+                $this->currentPage -> id = 'elm_Admin_AddRole';
+                $this->currentPage -> content = file_get_contents('System/UI/HTML/addRoleMask.html', FILE_USE_INCLUDE_PATH);
+            }
+        }
+
+        else if (isset($_GET['deleteRole_admin']) && isset($_GET['id'])){
+            if (elm_RoleManger::deleteRole($_GET['id'])){
+                header("Location: index.php?page=elm_RoleManagement");
+            }
+            else {
+                //TODO: error handling
+                echo "Not allowed";
+            }
         }
     }
 
