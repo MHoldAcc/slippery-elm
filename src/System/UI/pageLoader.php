@@ -36,7 +36,7 @@ class elm_PageLoader {
 
         $this->setNavBar();
 
-        $this->elm_Page_LoginFunctionality();
+        $this->checkGetAndPostValues();
 
         elm_Page_UserManagementFunctionality();
 
@@ -59,33 +59,21 @@ class elm_PageLoader {
         $this->HTML = str_replace($placeholder, $value, $this->HTML);
     }
 
-    /**
-     * Sets Login Button (Login/Logout)
-     * Load login form if url = index.php?login
-     * Logs out user if url = index.php?logout
-     */
-    function elm_Page_LoginFunctionality()
-    {
-        //Login functionality
+    private function checkGetAndPostValues(){
+        //Load login Page if needed
         if (isset($_GET['login'])) {
             $this->currentPage = new elm_Page();
             $this->currentPage->name = 'Login';
             $this->currentPage->id = 'elm_Login';
             $this->currentPage->content = file_get_contents('System/UI/HTML/loginMask.html', FILE_USE_INCLUDE_PATH);
         }
-
-        if (isset($_GET['logout']))
-            elm_Login_Logout();
-        if (elm_Login_IsLoggedIn()) {
-            $this->replacePlaceholder("[elm_Login_Link]", "index.php?logout");
-            $this->replacePlaceholder("[elm_Login_Text]", "Abmelden");
-        } else {
-            $this->replacePlaceholder("[elm_Login_Link]", "index.php?login");
-            $this->replacePlaceholder("[elm_Login_Text]", "Anmelden");
-            if (isset($_POST['elm_Login_Execute'])) {
-                elm_Login_Login($_POST['elm_Login_Username'], $_POST['elm_Login_Password'], $_POST['elm_Login_Password']);
-            }
+        //Execute login if needed
+        if (isset($_POST['elm_Login_Execute'])) {
+            elm_LoginFunctionality::executeLogin($_POST['elm_Login_Username'], $_POST['elm_Login_Password'], $_POST['elm_Login_Password']);
         }
+        //Execute logout if needed
+        if (isset($_GET['logout']))
+            elm_LoginFunctionality::executeLogout();
     }
 
     /**
@@ -166,7 +154,7 @@ class elm_PageLoader {
     {
         $pages = elm_Data_GetPages();
 
-        if (elm_Login_IsLoggedIn()) {
+        if (elm_LoginFunctionality::userIsLoggedIn()) {
 
             if ($_SESSION['login_role_fk'] == 1) {
                 //Adds Admin Page
@@ -250,6 +238,14 @@ class elm_PageLoader {
         $this->replacePlaceholder("[elm_Page_NavBar]", $this->navBar);
         $this->replacePlaceholder("[elm_Page_Id]", $this->currentPage->id);
         $this->replacePlaceholder("[elm_Page_Name]", $this->currentPage->name);
+
+        if (elm_LoginFunctionality::userIsLoggedIn()) {
+            $this->replacePlaceholder("[elm_Login_Link]", "index.php?logout");
+            $this->replacePlaceholder("[elm_Login_Text]", "Abmelden");
+        } else {
+            $this->replacePlaceholder("[elm_Login_Link]", "index.php?login");
+            $this->replacePlaceholder("[elm_Login_Text]", "Anmelden");
+        }
     }
 }
 
