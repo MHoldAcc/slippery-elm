@@ -148,6 +148,31 @@ class elm_PageLoader {
         }
 
         /**
+         * Edits current user values
+         */
+        else if(isset($_POST['elm_EditUser_Execute'])){
+            if(elm_UserManager::elm_User_EditValues($_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email']))
+                header("Location: index.php");
+            else{
+                //TODO: error handling
+                echo "error";
+            }
+
+        }
+
+        /**
+         * Deletes current user
+         */
+        else if(isset($_GET['elm_EditUser_DeleteCurrentUser'])){
+            if(elm_UserManager::elm_User_DeleteCurrentUser())
+                header("Location: index.php");
+            else{
+                //TODO: error handling
+                echo "error";
+            }
+        }
+
+        /**
          * Add/Delete roles
          */
         else if(isset($_GET['addRole_admin'])){
@@ -172,6 +197,9 @@ class elm_PageLoader {
             }
         }
 
+        /**
+         * Deletes a given role
+         */
         else if (isset($_GET['deleteRole_admin']) && isset($_GET['id'])){
             if (elm_RoleManger::deleteRole($_GET['id'])){
                 header("Location: index.php?page=elm_RoleManagement");
