@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Creates database tables and base data on first installation
  */
@@ -15,7 +14,7 @@ $sql->execute();
  * initialize DB if it isn't initialized yet
  */
 function elm_Data_InitializeDb(){
-    include("config.php");
+    include_once("../../config.php");
     if ($elm_Settings_ConnectionHost == "mysql") {
         include_once "MariaDb/initializeMariaDB.php";
         initializeMariaDB();
@@ -64,16 +63,12 @@ function elm_Data_GetIsDbInitialized(){
  */
 function elm_Data_UpdateUser($id, $name, $pass, $mail){
     GLOBAL $conn;
-
-    $name = $name;
     $name = stripslashes($name);
     $password = stripslashes($pass);
-    //$password = $conn->real_escape_string($password);
     $password = hash('sha512', $password);
-
     $sql = $conn->prepare("UPDATE elm_users 
-              SET username = ?, password = ?, email = ?
-              WHERE usersid = ?;");
+                                      SET username = ?, password = ?, email = ?
+                                      WHERE usersid = ?;");
     $sql->bindParam(1, $name);
     $sql->bindParam(2, $password);
     $sql->bindParam(3, $mail);
@@ -103,7 +98,7 @@ function elm_Data_DeleteUser($id){
     GLOBAL $conn;
     $id = stripslashes($id);
     $sql = $conn->prepare("DELETE FROM elm_users
-              WHERE usersid = ?;");
+                                      WHERE usersid = ?;");
     $sql->bindParam(1, $id);
     $sql->execute();
 }
@@ -132,7 +127,7 @@ function elm_Data_GetUsers(){
     GLOBAL $conn;
     $elmUsers = array();
     $sql = $conn->prepare("SELECT * FROM elm_users 
-              WHERE isactive = TRUE;");
+                                      WHERE isactive = TRUE;");
     if($sql->execute()){
         while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
             array_push($elmUsers, $row);
@@ -145,29 +140,14 @@ function elm_Data_GetUsers(){
  * Creates a user in the database
  * @param $userName
  * @param $password
- * @param $mail
- * @param $roleId
- * @return bool User creation was successful
- *
- * CREATE TABLE elm_users (
- * usersID int(11) NOT NULL,
- * username varchar(255) NOT NULL,
- * password varchar(255) NOT NULL,
- * email varchar(255) NOT NULL,
- * isActive tinyint(1) NOT NULL,
- * usersCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * usersModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * usersCreaterID int(11) NOT NULL,
- * usersModifierID int(11) NOT NULL,
- * role_FK int(11) NOT NULL
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
- *
+ * @param $email
+ * @param $roleID
+ * @return bool Returns true if user creation was succesful
  */
 function elm_Data_CreateUser($userName, $password, $email, $roleID){
     GLOBAL $conn;
     $created = false;
-    $name = $userName;
-    $name = stripslashes($name);
+    $name = stripslashes($userName);
     $password = stripslashes($password);
     $password = hash('sha512', $password);
     $email = stripslashes($email);
@@ -178,8 +158,8 @@ function elm_Data_CreateUser($userName, $password, $email, $roleID){
 
     if ($sql->execute() && $sql->rowCount() == 0){
         $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isactive, role_fk) 
-              VALUES 
-              (?, ?, ?, TRUE, ?);");
+                                          VALUES 
+                                          (?, ?, ?, TRUE, ?);");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
         $sql->bindParam(3, $email);
@@ -202,7 +182,7 @@ function elm_Data_CreateUser($userName, $password, $email, $roleID){
  * @return bool
  */
 function elm_Data_login_User($userName, $password, $verify){
-    //Check if User exists and is using right password Login function
+    //Check if User exists and is using right password
     GLOBAL $conn;
     $name = $userName;
     if ($verify === $password) {
@@ -210,7 +190,8 @@ function elm_Data_login_User($userName, $password, $verify){
         $password = stripslashes($password);
         $password = hash('sha512', $password);
         $sql = $conn->prepare("SELECT usersid, role_fk FROM elm_users 
-                  WHERE username = ? AND password = ?;");
+                                          WHERE username = ? 
+                                          AND password = ?;");
         $sql->bindParam(1, $name);
         $sql->bindParam(2, $password);
         if($sql->execute()){
@@ -240,25 +221,12 @@ function elm_Data_login_User($userName, $password, $verify){
  * @param $parentPage
  * @param $keywords
  * @param $sorting
- *
- * CREATE TABLE elm_pages (
- * pagesID int(11) NOT NULL,
- * pagesName varchar(255) NOT NULL,
- * pagesContent text,
- * pagesParentPage varchar(255),
- * pagesKeywords varchar(255) NOT NULL,
- * pagesSorting int(11) NOT NULL,
- * pagesCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesCreaterID int(11) NOT NULL,
- * pagesModifierID int(11) NOT NULL
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting){
     GLOBAL $conn;
     $sql = $conn->prepare("INSERT INTO elm_pages (pagesname, pagescontent, pagesparentpage, pageskeywords, pagessorting) 
-            VALUES 
-            (?, ?, ?, ?, ?);");
+                                      VALUES 
+                                      (?, ?, ?, ?, ?);");
     $sql->bindParam(1, $title);
     $sql->bindParam(2, $content);
     $sql->bindParam(3, $parentPage);
@@ -268,34 +236,19 @@ function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting)
 }
 
 /**
- * allows te creation of new pages in database
- *
+ * Allows te creation of new pages in database
  * @param $pageID
- * @param $pageName
  * @param $title
- * @param $parentPage
  * @param $content
+ * @param $parentPage
  * @param $keywords
  * @param $sorting
- *
- * CREATE TABLE elm_pages (
- * pagesID int(11) NOT NULL,
- * pagesName varchar(255) NOT NULL,
- * pagesContent text,
- * pagesParentPage varchar(255),
- * pagesKeywords varchar(255) NOT NULL,
- * pagesSorting int(11) NOT NULL,
- * pagesCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesCreaterID int(11) NOT NULL,
- * pagesModifierID int(11) NOT NULL
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 function elm_Data_AdminUpdatePage($pageID, $title, $content, $parentPage, $keywords, $sorting){
     GLOBAL $conn;
     $sql = $conn->prepare("UPDATE elm_pages 
-              SET pagesname = ?, pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
-              WHERE pagesid = ?;");
+                                      SET pagesname = ?, pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
+                                      WHERE pagesid = ?;");
     $sql->bindParam(1, $title);
     $sql->bindParam(2, $content);
     $sql->bindParam(3, $parentPage);
@@ -306,29 +259,15 @@ function elm_Data_AdminUpdatePage($pageID, $title, $content, $parentPage, $keywo
 }
 
 /**
- * allows the cotent of a page to be updated
- *
+ * Allows the content of a page to be updated
  * @param $pageID
  * @param $content
- *
- * CREATE TABLE elm_pages (
- * pagesID int(11) NOT NULL,
- * pagesName varchar(255) NOT NULL,
- * pagesContent text,
- * pagesParentPage varchar(255),
- * pagesKeywords varchar(255) NOT NULL,
- * pagesSorting int(11) NOT NULL,
- * pagesCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesCreaterID int(11) NOT NULL,
- * pagesModifierID int(11) NOT NULL
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  */
 function elm_Data_UpdatePageContent($pageID, $content){
     GLOBAL $conn;
     $sql = $conn->prepare("UPDATE elm_pages 
-              SET pagescontent = ? 
-              WHERE pagesid = ?;");
+                                      SET pagescontent = ? 
+                                      WHERE pagesid = ?;");
     $sql->bindParam(1, $content);
     $sql->bindParam(2, $pageID);
     $sql->execute();
@@ -336,7 +275,6 @@ function elm_Data_UpdatePageContent($pageID, $content){
 
 /**
  * This function returns the page object as an array
- *
  * @return array
  */
 function elm_Data_GetPages(){
@@ -349,7 +287,6 @@ function elm_Data_GetPages(){
             array_push($pages, $row);
         }
     }
-
     //Parses Page Objects
     $pageObjects = array();
     foreach ($pages as $page) {
@@ -365,19 +302,6 @@ function elm_Data_GetPages(){
         $pageObject->modified = $page['pagesmodified'];
         $pageObject->creatorId = $page['pagescreaterid'];
         $pageObject->modifierId = $page['pagesmodifierid'];
-
-        /* $pageObject->id = $page->pagesID;
-         $pageObject->name = $page->pagesName;
-         $pageObject->content = $page->pagesContent;
-         $pageObject->parentPage = $page->pagesParentPage;
-         $pageObject->keywords = $page->pagesKeywords;
-         $pageObject->sorting = $page->pagesSorting;
-         $pageObject->sorting = $page->pagesIsHome;
-         $pageObject->created = $page->pagesCreated;
-         $pageObject->modified = $page->pagesModified;
-         $pageObject->creatorId = $page->pagesCreaterID;
-         $pageObject->modifierId = $page->pagesModifierID;*/
-
         array_push($pageObjects, $pageObject);
     }
     return $pageObjects;
@@ -394,8 +318,7 @@ function elm_Data_GetSpecificPages($pageID){
     $pageObjects = array();
 
     $sql = $conn->prepare("SELECT * FROM elm_pages 
-              WHERE pagesid = ?;");
-
+                                      WHERE pagesid = ?;");
     $sql->bindParam(1, $pageID);
 
     if($sql->execute()){
@@ -419,30 +342,17 @@ function elm_Data_GetSpecificPages($pageID){
             array_push($pageObjects, $pageObject);
         }
     }
-
     return $pageObjects;
 }
 
 /**
  * Deletes a page from database
- *
- * CREATE TABLE elm_pages (
- * pagesID int(11) NOT NULL,
- * pagesName varchar(255) NOT NULL,
- * pagesContent text,
- * pagesParentPage varchar(255),
- * pagesKeywords varchar(255) NOT NULL,
- * pagesSorting int(11) NOT NULL,
- * pagesCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- * pagesCreaterID int(11) NOT NULL,
- * pagesModifierID int(11) NOT NULL
- * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ * @param $pageID
  */
 function elm_Data_DeletePages($pageID){
     GLOBAL $conn;
     $sql = $conn->prepare("DELETE FROM elm_pages 
-              WHERE pagesid = ?;");
+                                      WHERE pagesid = ?;");
     $sql->bindParam(1, $pageID);
     $sql->execute();
 }
@@ -489,8 +399,8 @@ function elm_Data_GetRole(){
 function elm_Data_CreateRole($roleName, $roleDescription){
     GLOBAL $conn;
     $sql = $conn->prepare("INSERT INTO elm_role (rolename, roledescription) 
-            VALUES 
-            (?, ?);");
+                                      VALUES 
+                                      (?, ?);");
     $sql->bindParam(1, $roleName);
     $sql->bindParam(2, $roleDescription);
     $sql->execute();
@@ -504,14 +414,13 @@ function elm_Data_DeleteRole($roleId){
     GLOBAL $conn;
     $id = stripslashes($roleId);
     $sql = $conn->prepare("DELETE FROM elm_role
-              WHERE roleid = ?;");
+                                      WHERE roleid = ?;");
     $sql->bindParam(1, $id);
     $sql->execute();
 }
 
 /**
  * Returns a list of user that are assigned a specific role
- *
  * @param $roleId
  * @return array
  */
@@ -520,7 +429,7 @@ function elm_Data_AssignmentRole($roleId){
     $roleId = stripslashes($roleId);
     $roles = array();
     $sql = $conn->prepare("SELECT * FROM elm_users
-              WHERE role_fk = ?;");
+                                      WHERE role_fk = ?;");
     $sql->bindParam(1, $roleId);
     $sql->execute();
     while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
