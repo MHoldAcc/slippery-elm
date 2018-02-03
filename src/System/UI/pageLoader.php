@@ -7,34 +7,34 @@ include_once("System/Business/PageManagement/pageManagement.php");
 include_once("System/Business/RoleManagement/roleManagement.php");
 
 class elm_PageLoader {
-    private $NavBar;
+    private $navBar;
     private $HTML;
-    private $CurrentPage;
+    private $currentPage;
 
     public function __construct()
     {
-        $this->NavBar = '';
+        $this->navBar = '';
         $this->HTML = '';
-        $this->CurrentPage = NULL;
+        $this->currentPage = NULL;
     }
 
     /**
      * Loads and prints the content of the current webpage
      */
-    public function PrintPageContent()
+    public function printPageContent()
     {
         @session_start();
 
-        $this->GetCurrentPageId();
+        $this->setCurrentPageId();
 
         $this->HTML = file_get_contents('Styling/index.html', FILE_USE_INCLUDE_PATH);
 
-        $this->CurrentPage = new elm_Page();
-        $this->CurrentPage->name = '404 Error';
-        $this->CurrentPage->id = 'elm_404';
-        $this->CurrentPage->content = '<h1>404 Page not found</h1>';
+        $this->currentPage = new elm_Page();
+        $this->currentPage->name = '404 Error';
+        $this->currentPage->id = 'elm_404';
+        $this->currentPage->content = '<h1>404 Page not found</h1>';
 
-        $this->SetNavBar();
+        $this->setNavBar();
 
         $this->elm_Page_LoginFunctionality();
 
@@ -44,7 +44,7 @@ class elm_PageLoader {
 
         elm_Page_RoleManagementFunctionality();
 
-        $this->ReplaceAllPlaceholders();
+        $this->replaceAllPlaceholders();
 
         eval('?>' . $this->HTML . '<?php');
     }
@@ -54,7 +54,7 @@ class elm_PageLoader {
      * @param $placeholder The placeholder to replace
      * @param $value The value to set
      */
-    function ReplacePlaceholder(string $placeholder, string $value)
+    public function replacePlaceholder(string $placeholder, string $value)
     {
         $this->HTML = str_replace($placeholder, $value, $this->HTML);
     }
@@ -68,20 +68,20 @@ class elm_PageLoader {
     {
         //Login functionality
         if (isset($_GET['login'])) {
-            $this->CurrentPage = new elm_Page();
-            $this->CurrentPage->name = 'Login';
-            $this->CurrentPage->id = 'elm_Login';
-            $this->CurrentPage->content = file_get_contents('System/UI/HTML/loginMask.html', FILE_USE_INCLUDE_PATH);
+            $this->currentPage = new elm_Page();
+            $this->currentPage->name = 'Login';
+            $this->currentPage->id = 'elm_Login';
+            $this->currentPage->content = file_get_contents('System/UI/HTML/loginMask.html', FILE_USE_INCLUDE_PATH);
         }
 
         if (isset($_GET['logout']))
             elm_Login_Logout();
         if (elm_Login_IsLoggedIn()) {
-            $this->ReplacePlaceholder("[elm_Login_Link]", "index.php?logout");
-            $this->ReplacePlaceholder("[elm_Login_Text]", "Abmelden");
+            $this->replacePlaceholder("[elm_Login_Link]", "index.php?logout");
+            $this->replacePlaceholder("[elm_Login_Text]", "Abmelden");
         } else {
-            $this->ReplacePlaceholder("[elm_Login_Link]", "index.php?login");
-            $this->ReplacePlaceholder("[elm_Login_Text]", "Anmelden");
+            $this->replacePlaceholder("[elm_Login_Link]", "index.php?login");
+            $this->replacePlaceholder("[elm_Login_Text]", "Anmelden");
             if (isset($_POST['elm_Login_Execute'])) {
                 elm_Login_Login($_POST['elm_Login_Username'], $_POST['elm_Login_Password'], $_POST['elm_Login_Password']);
             }
@@ -91,9 +91,9 @@ class elm_PageLoader {
     /**
      * Creates the nav menu
      */
-    function SetNavBar(){
+    private function setNavBar(){
         $menuContent = '';
-        $allPages = $this->GetAllPages();
+        $allPages = $this->getAllPages();
         foreach ($allPages as $page){
             if(!isset($page->parentPage) || strlen(str_replace(' ', '', $page->parentPage)) == 0){
                 $currentId = $page->id;
@@ -143,26 +143,26 @@ class elm_PageLoader {
             }
             //Sets page content if current page is in loop
             if($page->id == (string)$_SESSION['elm_Pages_CurrentPageId']){
-                $this->SetCurrentPage($page);
+                $this->setCurrentPage($page);
             }
         }
-        $this->NavBar = $menuContent;
+        $this->navBar = $menuContent;
     }
 
     /**
      * Sets the current page shown, as a global variable
      * @param $page The page to set
      */
-    function SetCurrentPage(elm_Page $page)
+    public function setCurrentPage(elm_Page $page)
     {
-        $this->CurrentPage = $page;
+        $this->currentPage = $page;
     }
 
     /**
      * Gets all pages from the database and all predefined pages.
      * @return array An array of all pages as elm_Page objects
      */
-    function GetAllPages()
+    private function getAllPages() : array
     {
         $pages = elm_Data_GetPages();
 
@@ -226,7 +226,7 @@ class elm_PageLoader {
      * Also sets last page to the session
      * Variables = elm_Pages_CurrentPageId and elm_Pages_LastPageId
      */
-    function GetCurrentPageId()
+    private function setCurrentPageId()
     {
         if (isset($_SESSION['elm_Pages_CurrentPageId'])) {
             $_SESSION['elm_Pages_LastPageId'] = $_SESSION['elm_Pages_CurrentPageId'];
@@ -244,12 +244,12 @@ class elm_PageLoader {
     /**
      * Replaces all placeholders created by slippery elm in the html construct
      */
-    function ReplaceAllPlaceholders()
+    private function replaceAllPlaceholders()
     {
-        $this->ReplacePlaceholder("[elm_Page_Content]", $this->CurrentPage->content);
-        $this->ReplacePlaceholder("[elm_Page_NavBar]", $this->NavBar);
-        $this->ReplacePlaceholder("[elm_Page_Id]", $this->CurrentPage->id);
-        $this->ReplacePlaceholder("[elm_Page_Name]", $this->CurrentPage->name);
+        $this->replacePlaceholder("[elm_Page_Content]", $this->currentPage->content);
+        $this->replacePlaceholder("[elm_Page_NavBar]", $this->navBar);
+        $this->replacePlaceholder("[elm_Page_Id]", $this->currentPage->id);
+        $this->replacePlaceholder("[elm_Page_Name]", $this->currentPage->name);
     }
 }
 
