@@ -22,6 +22,7 @@ else{
 
     //Includes loading the page and content functionality
     include_once("System/UI/loadPage.php");
-    elm_Page_Load();
+    $pageLoader = new elm_PageLoader;
+    $pageLoader->PrintPageContent();
 }
 ?>
