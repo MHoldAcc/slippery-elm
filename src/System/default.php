@@ -21,7 +21,8 @@ else{
         elm_Data_ExecuteUpdate();
 
     //Includes loading the page and content functionality
-    include_once("System/UI/loadPage.php");
-    elm_Page_Load();
+    include_once("System/UI/pageLoader.php");
+    $pageLoader = new elm_PageLoader;
+    $pageLoader->printPageContent();
 }
 ?>
