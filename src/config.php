@@ -17,9 +17,8 @@ $elm_Settings_DbUser = "root"; //root
 /**
  * This variable is used to tell the connection to which port to connect
  */
-/*
- * $elm_Settings_Port = "3306";
- */
+$elm_Settings_Port = "3306";
+
 
 /**
  * This variable is used to tell the connection with which password the user uses identify himself to the server and the database
@@ -34,5 +33,5 @@ $elm_Settings_Db = "slippery_elm";
 /**
  * This variable is used to tel the PDO function which data source name to use, which is a concatanated sting, containing the information of $elm_Settings_ConnectionHost, $elm_Settings_ConnectionString and $elm_Settings_Db
  */
-$elm_Settings_DSN = $elm_Settings_ConnectionHost.":host=".$elm_Settings_ConnectionString.";dbname=".$elm_Settings_Db;
+$elm_Settings_DSN = $elm_Settings_ConnectionHost.":host=".$elm_Settings_ConnectionString.":".$elm_Settings_Port.";dbname=".$elm_Settings_Db;
 ?>
