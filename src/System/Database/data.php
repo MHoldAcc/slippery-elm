@@ -14,7 +14,7 @@ $sql->execute();
  * initialize DB if it isn't initialized yet
  */
 function elm_Data_InitializeDb(){
-    include_once("../../config.php");
+    include_once("config.php");
     if ($elm_Settings_ConnectionHost == "mysql") {
         include_once "MariaDb/initializeMariaDB.php";
         initializeMariaDB();
