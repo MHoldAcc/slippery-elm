@@ -1,8 +1,7 @@
 <?php
 //Includes the needed files
 include_once("System/Business/Login/login.php");
-include_once("System/Business/User/user.php");
-include_once("System/Business/UserManagement/userManagement.php");
+include_once("System/Business/UserManagement/userManager.php");
 include_once("System/Business/RoleManagement/roleManagement.php");
 
 class elm_PageLoader {
@@ -36,8 +35,6 @@ class elm_PageLoader {
         $this->setNavBar();
 
         $this->checkGetAndPostValues();
-
-        elm_Page_UserManagementFunctionality();
 
         $this->replaceAllPlaceholders();
 
@@ -151,7 +148,7 @@ class elm_PageLoader {
          * Edits current user values
          */
         else if(isset($_POST['elm_EditUser_Execute'])){
-            if(elm_UserManager::elm_User_EditValues($_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email']))
+            if(elm_UserManager::updateCurrentUser($_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email']))
                 header("Location: index.php");
             else{
                 //TODO: error handling
@@ -164,7 +161,7 @@ class elm_PageLoader {
          * Deletes current user
          */
         else if(isset($_GET['elm_EditUser_DeleteCurrentUser'])){
-            if(elm_UserManager::elm_User_DeleteCurrentUser())
+            if(elm_UserManager::deleteCurrentUser())
                 header("Location: index.php");
             else{
                 //TODO: error handling
@@ -207,6 +204,80 @@ class elm_PageLoader {
             else {
                 //TODO: error handling
                 echo "Not allowed";
+            }
+        }
+
+        /**
+         * Opens add user page
+         */
+        else if(isset($_GET['addUser_admin'])){
+            //go to Add UserManagement Page
+            $this->currentPage = new elm_Page();
+            $this->currentPage -> name = 'Add UserManagement';
+            $this->currentPage -> id = 'elm_Admin_AddUser';
+            $this->currentPage -> content = file_get_contents('System/UI/HTML/addUserMask.php', FILE_USE_INCLUDE_PATH);
+        }
+
+        /**
+         * Opens edit user page
+         */
+        else if (isset($_GET['editUser_admin']) && isset($_GET['id'])){
+            //go to Edit UserManagement Page
+            $elm_Page_CurrentPage = new elm_Page();
+            $elm_Page_CurrentPage -> name = 'Edit UserManagement';
+            $elm_Page_CurrentPage -> id = 'elm_Admin_AddUser';
+            $elm_Page_CurrentPage -> content = file_get_contents('System/UI/HTML/editUserMask.php', FILE_USE_INCLUDE_PATH);
+        }
+
+        /**
+         * Adds new user
+         */
+        else if (isset($_POST['elm_NewUser_Execute_admin'])) {
+            if (isset($_POST['elm_AddUser_Username']) && isset($_POST['elm_AddUser_Email']) && isset($_POST['elm_AddUser_Password']) && isset($_POST['elm_AddUser_Role'])) {
+                if(elm_UserManager::addUser($_POST['elm_AddUser_Username'], $_POST['elm_AddUser_Password'], $_POST['elm_AddUser_Email'], $_POST['elm_AddUser_Role']))
+                    header("Location: index.php?page=elm_UserManagement");
+                else {
+                    //TODO: error handling
+                    echo "error";
+                }
+            } else {
+                //TODO: error handling
+                echo "error";
+            }
+        }
+
+        /**
+         * Deletes existing user
+         */
+        else if (isset($_GET['deleteUser_admin'])){
+            //delete UserManagement
+            if (isset($_GET['id'])) {
+                if(elm_UserManager::deleteUser($_GET['id']))
+                    header("Location: index.php?page=elm_UserManagement");
+                else {
+                    //TODO: error handling
+                    echo "error";
+                }
+            }
+            else {
+                //TODO: error handling
+                echo "error";
+            }
+        }
+
+        if (isset($_POST['elm_EditUser_Execute_admin'])){
+            if (isset($_POST['elm_EditUser_Username']) && isset($_POST['elm_EditUser_Email']) && isset($_POST['elm_EditUser_Password']) && isset($_POST['elm_EditUser_Id'])) {
+                if (elm_UserManager::updateUser($_POST['elm_EditUser_Id'], $_POST['elm_EditUser_Username'], $_POST['elm_EditUser_Password'], $_POST['elm_EditUser_Email'])) {
+                    header("Location: index.php?page=elm_UserManagement");
+                }
+                else {
+                    //TODO: error handling
+                    echo "error";
+                }
+            }
+            else {
+                //TODO: error handling
+                echo "error";
             }
         }
     }
