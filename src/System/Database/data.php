@@ -4,14 +4,16 @@
  */
 
 class elm_Data {
+
+    private $conn;
+
     public function __construct(){
-        GLOBAL $conn;
         @session_start();
         include("config.php");
-        $conn = new PDO($elm_Settings_DSN, $elm_Settings_DbUser, $elm_Settings_DbPassword, array(
+        $this->conn = new PDO($elm_Settings_DSN, $elm_Settings_DbUser, $elm_Settings_DbPassword, array(
             PDO::ATTR_PERSISTENT => true
         ));
-        $sql = $conn->prepare("SET NAMES utf8;");
+        $sql = $this->conn->prepare("SET NAMES utf8;");
         $sql->execute();
     }
 
@@ -34,8 +36,7 @@ class elm_Data {
      * @return bool True if Db got created
      */
     public function elm_Data_GetIsDbInitialized(){
-        GLOBAL $conn;
-        $sql = $conn->prepare("SELECT * FROM elm_version;");
+        $sql = $this->conn->prepare("SELECT * FROM elm_version;");
         if ($sql->execute()){
             $initialized = true;
         } else {
@@ -67,11 +68,10 @@ class elm_Data {
      *
      */
     public function elm_Data_UpdateUser($id, $name, $pass, $mail){
-        GLOBAL $conn;
         $name = stripslashes($name);
         $password = stripslashes($pass);
         $password = hash('sha512', $password);
-        $sql = $conn->prepare("UPDATE elm_users 
+        $sql = $this->conn->prepare("UPDATE elm_users 
                                       SET username = ?, password = ?, email = ?
                                       WHERE usersid = ?;");
         $sql->bindParam(1, $name);
@@ -100,9 +100,8 @@ class elm_Data {
      *
      */
     public function elm_Data_DeleteUser($id){
-        GLOBAL $conn;
         $id = stripslashes($id);
-        $sql = $conn->prepare("DELETE FROM elm_users
+        $sql = $this->conn->prepare("DELETE FROM elm_users
                                       WHERE usersid = ?;");
         $sql->bindParam(1, $id);
         $sql->execute();
@@ -129,9 +128,8 @@ class elm_Data {
     public function elm_Data_GetUsers(){
         //Use the class elm_User as return values
         //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
-        GLOBAL $conn;
         $elmUsers = array();
-        $sql = $conn->prepare("SELECT * FROM elm_users 
+        $sql = $this->conn->prepare("SELECT * FROM elm_users 
                                       WHERE isactive = TRUE;");
         if($sql->execute()){
             while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
@@ -150,7 +148,6 @@ class elm_Data {
      * @return bool Returns true if user creation was succesful
      */
     public function elm_Data_CreateUser($userName, $password, $email, $roleID){
-        GLOBAL $conn;
         $created = false;
         $name = stripslashes($userName);
         $password = stripslashes($password);
@@ -158,11 +155,11 @@ class elm_Data {
         $email = stripslashes($email);
         $roleID = stripslashes($roleID);
 
-        $sql = $conn->prepare("SELECT * FROM elm_users WHERE username = ?;");
+        $sql = $this->conn->prepare("SELECT * FROM elm_users WHERE username = ?;");
         $sql->bindParam(1, $name);
 
         if ($sql->execute() && $sql->rowCount() == 0){
-            $sql = $conn->prepare("INSERT INTO elm_users (username, password, email, isactive, role_fk) 
+            $sql = $this->conn->prepare("INSERT INTO elm_users (username, password, email, isactive, role_fk) 
                                           VALUES 
                                           (?, ?, ?, TRUE, ?);");
             $sql->bindParam(1, $name);
@@ -188,13 +185,12 @@ class elm_Data {
      */
     public function elm_Data_login_User($userName, $password, $verify){
         //Check if User exists and is using right password
-        GLOBAL $conn;
         $name = $userName;
         if ($verify === $password) {
             $name = stripslashes($name);
             $password = stripslashes($password);
             $password = hash('sha512', $password);
-            $sql = $conn->prepare("SELECT usersid, role_fk FROM elm_users 
+            $sql = $this->conn->prepare("SELECT usersid, role_fk FROM elm_users 
                                           WHERE username = ? 
                                           AND password = ?;");
             $sql->bindParam(1, $name);
@@ -228,8 +224,7 @@ class elm_Data {
      * @param $sorting
      */
     public function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting){
-        GLOBAL $conn;
-        $sql = $conn->prepare("INSERT INTO elm_pages (pagesname, pagescontent, pagesparentpage, pageskeywords, pagessorting) 
+        $sql = $this->conn->prepare("INSERT INTO elm_pages (pagesname, pagescontent, pagesparentpage, pageskeywords, pagessorting) 
                                       VALUES 
                                       (?, ?, ?, ?, ?);");
         $sql->bindParam(1, $title);
@@ -250,8 +245,7 @@ class elm_Data {
      * @param $sorting
      */
     public function elm_Data_AdminUpdatePage($pageID, $title, $content, $parentPage, $keywords, $sorting){
-        GLOBAL $conn;
-        $sql = $conn->prepare("UPDATE elm_pages 
+        $sql = $this->conn->prepare("UPDATE elm_pages 
                                       SET pagesname = ?, pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
                                       WHERE pagesid = ?;");
         $sql->bindParam(1, $title);
@@ -269,8 +263,7 @@ class elm_Data {
      * @param $content
      */
     public function elm_Data_UpdatePageContent($pageID, $content){
-        GLOBAL $conn;
-        $sql = $conn->prepare("UPDATE elm_pages 
+        $sql = $this->conn->prepare("UPDATE elm_pages 
                                       SET pagescontent = ? 
                                       WHERE pagesid = ?;");
         $sql->bindParam(1, $content);
@@ -283,9 +276,8 @@ class elm_Data {
      * @return array
      */
     public function elm_Data_GetPages(){
-        GLOBAL $conn;
         $pages = array();
-        $sql = $conn->prepare("SELECT * FROM elm_pages;");
+        $sql = $this->conn->prepare("SELECT * FROM elm_pages;");
         $sql->execute();
         if($sql->execute()){
             while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
@@ -318,11 +310,10 @@ class elm_Data {
      * @return array
      */
     public function elm_Data_GetSpecificPages($pageID){
-        GLOBAL $conn;
         $pages = array();
         $pageObjects = array();
 
-        $sql = $conn->prepare("SELECT * FROM elm_pages 
+        $sql = $this->conn->prepare("SELECT * FROM elm_pages 
                                       WHERE pagesid = ?;");
         $sql->bindParam(1, $pageID);
 
@@ -355,8 +346,7 @@ class elm_Data {
      * @param $pageID
      */
     public function elm_Data_DeletePages($pageID){
-        GLOBAL $conn;
-        $sql = $conn->prepare("DELETE FROM elm_pages 
+        $sql = $this->conn->prepare("DELETE FROM elm_pages 
                                       WHERE pagesid = ?;");
         $sql->bindParam(1, $pageID);
         $sql->execute();
@@ -368,9 +358,8 @@ class elm_Data {
      * @return int RoleID
      */
     public function elm_Data_GetRoleId($roleName){
-        GLOBAL $conn;
         $id = array();
-        $sql = $conn->prepare("SELECT roleid FROM elm_role 
+        $sql = $this->conn->prepare("SELECT roleid FROM elm_role 
               WHERE roleName = ?;");
         $sql->bindParam(1, $roleName, PDO::PARAM_STR);
 
@@ -385,9 +374,8 @@ class elm_Data {
      * @return array
      */
     public function elm_Data_GetRole(){
-        GLOBAL $conn;
         $roles = array();
-        $sql = $conn->prepare("SELECT * FROM elm_role;");
+        $sql = $this->conn->prepare("SELECT * FROM elm_role;");
         if($sql->execute()){
             while ($row = $sql->fetch(PDO::FETCH_ASSOC)){
                 array_push($roles, $row);
@@ -402,8 +390,7 @@ class elm_Data {
      * @param $roleDescription
      */
     public function elm_Data_CreateRole($roleName, $roleDescription){
-        GLOBAL $conn;
-        $sql = $conn->prepare("INSERT INTO elm_role (rolename, roledescription) 
+        $sql = $this->conn->prepare("INSERT INTO elm_role (rolename, roledescription) 
                                       VALUES 
                                       (?, ?);");
         $sql->bindParam(1, $roleName);
@@ -416,9 +403,8 @@ class elm_Data {
      * @param $roleId
      */
     public function elm_Data_DeleteRole($roleId){
-        GLOBAL $conn;
         $id = stripslashes($roleId);
-        $sql = $conn->prepare("DELETE FROM elm_role
+        $sql = $this->conn->prepare("DELETE FROM elm_role
                                       WHERE roleid = ?;");
         $sql->bindParam(1, $id);
         $sql->execute();
@@ -430,10 +416,9 @@ class elm_Data {
      * @return array
      */
     public function elm_Data_AssignmentRole($roleId){
-        GLOBAL $conn;
         $roleId = stripslashes($roleId);
         $roles = array();
-        $sql = $conn->prepare("SELECT * FROM elm_users
+        $sql = $this->conn->prepare("SELECT * FROM elm_users
                                       WHERE role_fk = ?;");
         $sql->bindParam(1, $roleId);
         $sql->execute();
@@ -447,9 +432,8 @@ class elm_Data {
      * Returns newest database version from db
      */
     public function elm_Data_GetCurrentVersion(){
-        GLOBAL $conn;
         $dbVersion = "";
-        $sql = $conn->prepare("SELECT databaseversion FROM elm_version;");
+        $sql = $this->conn->prepare("SELECT databaseversion FROM elm_version;");
         if ($sql->execute()){
             $rows = $sql->fetch(PDO::FETCH_OBJ);
             $dbVersion = $rows[0];
