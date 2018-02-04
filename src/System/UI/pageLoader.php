@@ -1,6 +1,7 @@
 <?php
 //Includes the needed files
 include_once("System/Business/Login/login.php");
+include_once("System/Business/Testing/elmUnit.php");
 include_once("System/Business/UserManagement/userManager.php");
 include_once("System/Business/RoleManagement/roleManagement.php");
 
@@ -56,6 +57,22 @@ class elm_PageLoader {
      */
     private function checkGetAndPostValues(){
         GLOBAL $elm_Data;
+
+        /**
+         * All pages in the selection are only seen by logged in users
+         */
+
+        if(elm_LoginFunctionality::userIsLoggedIn()){
+            /**
+             * Loads testing page if needed
+             */
+            if (isset($_GET['elmUnit_Testing'])) {
+                $this->currentPage = new elm_Page();
+                $this->currentPage->name = 'elmUnit Testing';
+                $this->currentPage->id = 'elmUnit_Testing';
+                $this->currentPage->content = elmUnit_TestExecutor::executeTests();
+            }
+        }
 
         /**
          * Loads login Page if needed
