@@ -1,8 +1,8 @@
 <?php
     GLOBAL $elm_Data;
     //load users and roles form db
-    $users = $elm_Data->elm_Data_GetUsers();
-    $roles = $elm_Data->elm_Data_GetRole();
+    $users = $elm_Data->getUsers();
+    $roles = $elm_Data->getRole();
 
     //create roleMap: key-> roleID, value-> roleName
     //used to display roleName in Table

@@ -20,7 +20,7 @@ class elm_Data {
     /**
      * initialize DB if it isn't initialized yet
      */
-    public function elm_Data_InitializeDb(){
+    public function initializeDb(){
         include_once("config.php");
         if ($elm_Settings_ConnectionHost == "mysql") {
             include_once "MariaDb/initializeMariaDB.php";
@@ -35,7 +35,7 @@ class elm_Data {
      * Checks if tables in database are existing.
      * @return bool True if Db got created
      */
-    public function elm_Data_GetIsDbInitialized(){
+    public function getIsDbInitialized() : bool{
         $sql = $this->conn->prepare("SELECT * FROM elm_version;");
         if ($sql->execute()){
             $initialized = true;
@@ -46,28 +46,14 @@ class elm_Data {
     }
 
     /**
-     * Creates a user in the database
-     * @param $userName
-     * @param $password
-     * @param $mail
-     * @param $roleId
-     * @return bool User creation was successful
-     *
-     * CREATE TABLE elm_users (
-     * usersID int(11) NOT NULL,
-     * username varchar(255) NOT NULL,
-     * password varchar(255) NOT NULL,
-     * email varchar(255) NOT NULL,
-     * isActive tinyint(1) NOT NULL,
-     * usersCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * usersModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * usersCreaterID int(11) NOT NULL,
-     * usersModifierID int(11) NOT NULL,
-     * role_FK int(11) NOT NULL
-     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-     *
+     * Updates the values of a user with given id
+     * @param string $id The id of the user to update
+     * @param string $name The username to set
+     * @param string $pass The password to set
+     * @param string $mail The mail to set
+     * @return bool True if successful
      */
-    public function elm_Data_UpdateUser($id, $name, $pass, $mail){
+    public function updateUser(string $id, string $name, string $pass, string $mail) : bool {
         $name = stripslashes($name);
         $password = stripslashes($pass);
         $password = hash('sha512', $password);
@@ -83,23 +69,9 @@ class elm_Data {
 
     /**
      * Deletes a user from the database
-     * @param $id
-     *
-     * CREATE TABLE elm_users (
-     * usersID int(11) NOT NULL,
-     * username varchar(255) NOT NULL,
-     * password varchar(255) NOT NULL,
-     * email varchar(255) NOT NULL,
-     * isActive tinyint(1) NOT NULL,
-     * usersCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * usersModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * usersCreaterID int(11) NOT NULL,
-     * usersModifierID int(11) NOT NULL,
-     * role_FK int(11) NOT NULL
-     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-     *
+     * @param string $id the id of the user to delete
      */
-    public function elm_Data_DeleteUser($id){
+    public function deleteUser(string $id){
         $id = stripslashes($id);
         $sql = $this->conn->prepare("DELETE FROM elm_users
                                       WHERE usersid = ?;");
@@ -110,22 +82,8 @@ class elm_Data {
     /**
      * Returns all active users in an array
      * @return array All existing active users
-     *
-     * CREATE TABLE elm_users (
-     * usersID int(11) NOT NULL,
-     * username varchar(255) NOT NULL,
-     * password varchar(255) NOT NULL,
-     * email varchar(255) NOT NULL,
-     * isActive tinyint(1) NOT NULL,
-     * usersCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * usersModified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     * usersCreaterID int(11) NOT NULL,
-     * usersModifierID int(11) NOT NULL,
-     * role_FK int(11) NOT NULL
-     * ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-     *
      */
-    public function elm_Data_GetUsers(){
+    public function getUsers() : array {
         //Use the class elm_User as return values
         //Example on how to use classes in PHP here:  TBZ - elm -> M151 -> Beispiel Code -> Webservice json_dayAndJoke
         $elmUsers = array();
@@ -141,13 +99,13 @@ class elm_Data {
 
     /**
      * Creates a user in the database
-     * @param $userName
-     * @param $password
-     * @param $email
-     * @param $roleID
-     * @return bool Returns true if user creation was succesful
+     * @param string $userName The username to set
+     * @param string $password The password to set
+     * @param string $email The mail to set
+     * @param string $roleID The role id to set
+     * @return bool Returns true if user creation was successful
      */
-    public function elm_Data_CreateUser($userName, $password, $email, $roleID){
+    public function createUser(string $userName, string $password, string $email, string $roleID) : bool {
         $created = false;
         $name = stripslashes($userName);
         $password = stripslashes($password);
@@ -175,15 +133,15 @@ class elm_Data {
     }
 
     /**
-     * Takes input from login field varifies that the input was not altered during transmission and
+     * Takes input from login field verifies that the input was not altered during transmission and
      * proceeds to strip slashes
      * and finally completes the  login process.
-     * @param $userName
-     * @param $password
-     * @param $verify
-     * @return bool
+     * @param string $userName The username to login
+     * @param string $password The password to login
+     * @param string $verify The password verification to login
+     * @return bool True if successful
      */
-    public function elm_Data_login_User($userName, $password, $verify){
+    public function loginUser(string $userName, string $password, string $verify) : bool {
         //Check if User exists and is using right password
         $name = $userName;
         if ($verify === $password) {
@@ -217,13 +175,13 @@ class elm_Data {
 
     /**
      * Creates page in database
-     * @param $title
-     * @param $content
-     * @param $parentPage
-     * @param $keywords
-     * @param $sorting
+     * @param string $title The title of the page
+     * @param string $content The content of the page
+     * @param string $parentPage The parent page
+     * @param string $keywords The keywords of the page
+     * @param string $sorting The sorting of the page
      */
-    public function elm_Data_CreatePage($title, $content, $parentPage, $keywords, $sorting){
+    public function createPage(string $title, string $content, string $parentPage, string $keywords, string $sorting){
         $sql = $this->conn->prepare("INSERT INTO elm_pages (pagesname, pagescontent, pagesparentpage, pageskeywords, pagessorting) 
                                       VALUES 
                                       (?, ?, ?, ?, ?);");
@@ -236,15 +194,15 @@ class elm_Data {
     }
 
     /**
-     * Allows te creation of new pages in database
-     * @param $pageID
-     * @param $title
-     * @param $content
-     * @param $parentPage
-     * @param $keywords
-     * @param $sorting
+     * Allows the update of existing pages in the database
+     * @param string $pageID The id of the page to change
+     * @param string $title The title to set
+     * @param string $content The content to set
+     * @param string $parentPage The parent page to set
+     * @param string $keywords The keywords to set
+     * @param string $sorting The sorting to set
      */
-    public function elm_Data_AdminUpdatePage($pageID, $title, $content, $parentPage, $keywords, $sorting){
+    public function updatePage(string $pageID, string $title, string $content, string $parentPage, string $keywords, string $sorting){
         $sql = $this->conn->prepare("UPDATE elm_pages 
                                       SET pagesname = ?, pagescontent = ?, pagesparentpage = ?, pageskeywords = ?, pagessorting = ? 
                                       WHERE pagesid = ?;");
@@ -258,24 +216,10 @@ class elm_Data {
     }
 
     /**
-     * Allows the content of a page to be updated
-     * @param $pageID
-     * @param $content
-     */
-    public function elm_Data_UpdatePageContent($pageID, $content){
-        $sql = $this->conn->prepare("UPDATE elm_pages 
-                                      SET pagescontent = ? 
-                                      WHERE pagesid = ?;");
-        $sql->bindParam(1, $content);
-        $sql->bindParam(2, $pageID);
-        $sql->execute();
-    }
-
-    /**
      * This function returns the page object as an array
      * @return array
      */
-    public function elm_Data_GetPages(){
+    public function getPages() : array {
         $pages = array();
         $sql = $this->conn->prepare("SELECT * FROM elm_pages;");
         $sql->execute();
@@ -306,12 +250,12 @@ class elm_Data {
 
     /**
      * This function returns a specific filled page object filtered by id
-     * @param $pageID
-     * @return array
+     * @param string $pageID The id of the page to get
+     * @return elm_Page The found page
      */
-    public function elm_Data_GetSpecificPages($pageID){
+    public function getPageById(string $pageID) : elm_Page{
         $pages = array();
-        $pageObjects = array();
+        $pageObject = new elm_Page();
 
         $sql = $this->conn->prepare("SELECT * FROM elm_pages 
                                       WHERE pagesid = ?;");
@@ -323,7 +267,6 @@ class elm_Data {
             }
             //Parses Page Objects
             foreach ($pages as $page) {
-                $pageObject = new elm_Page();
                 $pageObject->id = $page['pagesid'];
                 $pageObject->name = $page['pagesname'];
                 $pageObject->content = $page['pagescontent'];
@@ -335,17 +278,16 @@ class elm_Data {
                 $pageObject->modified = $page['pagesmodified'];
                 $pageObject->creatorId = $page['pagescreaterid'];
                 $pageObject->modifierId = $page['pagesmodifierid'];
-                array_push($pageObjects, $pageObject);
             }
         }
-        return $pageObjects;
+        return $pageObject;
     }
 
     /**
      * Deletes a page from database
-     * @param $pageID
+     * @param string $pageID The page to delete
      */
-    public function elm_Data_DeletePages($pageID){
+    public function deletePage(string $pageID){
         $sql = $this->conn->prepare("DELETE FROM elm_pages 
                                       WHERE pagesid = ?;");
         $sql->bindParam(1, $pageID);
@@ -354,10 +296,10 @@ class elm_Data {
 
     /**
      * Gets the id of any role by the role name
-     * @param $roleName
-     * @return int RoleID
+     * @param string $roleName The name of the role to search
+     * @return int RoleID The id of the role
      */
-    public function elm_Data_GetRoleId($roleName){
+    public function getRoleId(string $roleName) : int {
         $id = array();
         $sql = $this->conn->prepare("SELECT roleid FROM elm_role 
               WHERE roleName = ?;");
@@ -371,9 +313,9 @@ class elm_Data {
 
     /**
      * Returns an array of all roles
-     * @return array
+     * @return array All existing roles
      */
-    public function elm_Data_GetRole(){
+    public function getRole() : array {
         $roles = array();
         $sql = $this->conn->prepare("SELECT * FROM elm_role;");
         if($sql->execute()){
@@ -386,10 +328,10 @@ class elm_Data {
 
     /**
      * This function is used to create new roles to assign to users
-     * @param $roleName
-     * @param $roleDescription
+     * @param string $roleName The name of the role to create
+     * @param string $roleDescription The description of the role to create
      */
-    public function elm_Data_CreateRole($roleName, $roleDescription){
+    public function createRole(string $roleName, string $roleDescription){
         $sql = $this->conn->prepare("INSERT INTO elm_role (rolename, roledescription) 
                                       VALUES 
                                       (?, ?);");
@@ -400,9 +342,9 @@ class elm_Data {
 
     /**
      * This function is used to remove unwanted roles
-     * @param $roleId
+     * @param string $roleId The id of the role to delete
      */
-    public function elm_Data_DeleteRole($roleId){
+    public function deleteRole(string $roleId){
         $id = stripslashes($roleId);
         $sql = $this->conn->prepare("DELETE FROM elm_role
                                       WHERE roleid = ?;");
@@ -411,11 +353,11 @@ class elm_Data {
     }
 
     /**
-     * Returns a list of user that are assigned a specific role
-     * @param $roleId
-     * @return array
+     * Returns a list of users that are assigned a specific role
+     * @param string $roleId The role id to use
+     * @return array All users assigned to that role
      */
-    public function elm_Data_AssignmentRole($roleId){
+    public function getUsersByRole(string $roleId) : array {
         $roleId = stripslashes($roleId);
         $roles = array();
         $sql = $this->conn->prepare("SELECT * FROM elm_users
@@ -430,29 +372,30 @@ class elm_Data {
 
     /**
      * Returns newest database version from db
+     * @return string The current database version
      */
-    public function elm_Data_GetCurrentVersion(){
+    public function getCurrentDbVersion() : string {
         $dbVersion = "";
         $sql = $this->conn->prepare("SELECT databaseversion FROM elm_version;");
         if ($sql->execute()){
             $rows = $sql->fetch(PDO::FETCH_OBJ);
             $dbVersion = $rows[0];
         }
-        return $dbVersion;
+        return (string)$dbVersion;
     }
 
     /**
      * Executes all Scripts in MariaDb Folder which are not in database
      */
-    public function elm_Data_ExecuteUpdate(){
+    public function executeUpdate(){
         /*Insert code here*/
     }
 
     /**
      * Checks if the user can edit a page or not
-     * Returns true or false
+     * @return bool True if user can edit pages
      */
-    public function elm_Data_canUserEdit() {
+    public function canUserEditPages() : bool {
         $canEdit = false;
         /*Insert code here*/
         return $canEdit;

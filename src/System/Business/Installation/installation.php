@@ -8,8 +8,8 @@ class elm_Installation {
     public static function initializeDb() : bool {
         GLOBAL $elm_Data;
         //Only execute if db wasn't already created
-        if(!$elm_Data->elm_Data_GetIsDbInitialized()){
-            $elm_Data->elm_Data_InitializeDb();
+        if(!$elm_Data->getIsDbInitialized()){
+            $elm_Data->initializeDb();
             return true;
         }
         return false;
@@ -32,7 +32,7 @@ class elm_Installation {
         //Check if all variables have a value
         if($username != '' && $password != '' &&  $email != ''){
             //Create admin user
-            if($elm_Data->elm_Data_CreateUser($username, $password, $email, $elm_Data->elm_Data_GetRoleId('admin')))
+            if($elm_Data->createUser($username, $password, $email, $elm_Data->getRoleId('admin')))
                 return true;
         }
 

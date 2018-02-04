@@ -108,7 +108,7 @@ class elm_PageLoader {
              * $pageID, $pageName, $title, $parentPage, $content, $keywords, $sorting
              **/
             if (isset($_POST['elm_EditPage_Titel']) && isset($_POST['elm_EditPage_Keyword']) && isset($_POST['elm_EditPage_Sorting']) && isset($_POST['elm_EditPage_Content']) && isset($_POST['elm_EditPage_Id'])) {
-                $elm_Data->elm_Data_AdminUpdatePage($_POST['elm_EditPage_Id'], $_POST['elm_EditPage_Titel'], $_POST['elm_EditPage_Content'], $_POST['elm_EditPage_parentPage'], $_POST['elm_EditPage_Keyword'], $_POST['elm_EditPage_Sorting']);
+                $elm_Data->updatePage($_POST['elm_EditPage_Id'], $_POST['elm_EditPage_Titel'], $_POST['elm_EditPage_Content'], $_POST['elm_EditPage_parentPage'], $_POST['elm_EditPage_Keyword'], $_POST['elm_EditPage_Sorting']);
                 header("Location: index.php?page=elm_Page_Edit");
             }
             else {
@@ -122,7 +122,7 @@ class elm_PageLoader {
          */
         if (isset($_POST['elm_addPage_Execute_admin'])){
             if (isset($_POST['elm_addPage_Titel']) && isset($_POST['elm_addPage_Keyword']) && isset($_POST['elm_addPage_Sorting']) && isset($_POST['elm_addPage_Content']) && isset($_POST['elm_addPage_ParentPage'])) {
-                if ($elm_Data->elm_Data_CreatePage($_POST['elm_addPage_Titel'], $_POST['elm_addPage_Content'], $_POST['elm_addPage_ParentPage'], $_POST['elm_addPage_Keyword'], $_POST['elm_addPage_Sorting'])) {
+                if ($elm_Data->createPage($_POST['elm_addPage_Titel'], $_POST['elm_addPage_Content'], $_POST['elm_addPage_ParentPage'], $_POST['elm_addPage_Keyword'], $_POST['elm_addPage_Sorting'])) {
                     header("Location: index.php?page=elm_Page_Edit");
                 }
             }
@@ -137,7 +137,7 @@ class elm_PageLoader {
          */
         if (isset($_GET['deletePage_admin']) && isset($_GET['id'])) {
             if(isset($_GET['id'])) {
-                $elm_Data->elm_Data_DeletePages($_GET['id']);
+                $elm_Data->deletePage($_GET['id']);
             } else {
                 //TODO: error handling
                 echo "error";
@@ -364,7 +364,7 @@ class elm_PageLoader {
     private function getAllPages() : array
     {
         GLOBAL $elm_Data;
-        $pages = $elm_Data->elm_Data_GetPages();
+        $pages = $elm_Data->getPages();
 
         if (elm_LoginFunctionality::userIsLoggedIn()) {
 

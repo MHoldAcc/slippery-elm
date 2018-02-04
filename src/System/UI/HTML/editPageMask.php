@@ -1,9 +1,9 @@
 <?php
 GLOBAL $elm_Data;
-$page = $elm_Data->elm_Data_GetSpecificPages($_GET['id']);
+$page = $elm_Data->getPageById($_GET['id']);
 
 /**
- * Formular for create a page. "save"-Button triggers pageManagement.
+ * Form to create a page. "save"-Button triggers pageManagement.
  * */
 ?>
 <h1>Seite bearbeiten</h1>
@@ -16,27 +16,27 @@ $page = $elm_Data->elm_Data_GetSpecificPages($_GET['id']);
             <input type="hidden" id="elm_EditPage_Id" name="elm_EditPage_Id" value="<?php echo $_GET['id']; ?>" />
         <tr>
             <td>Seitennamen: </td>
-            <td><input type="text" id="elm_EditPage_Titel" value="<?php echo $page[0]->name; ?>" name="elm_EditPage_Titel" size="42" autofocus ></td>
+            <td><input type="text" id="elm_EditPage_Titel" value="<?php echo $page->name; ?>" name="elm_EditPage_Titel" size="42" autofocus ></td>
         </tr>
 
         <tr>
             <td>Parent Page:</td>
-            <td><input type="text" id="elm_EditPage_parentPage" value="<?php echo $page[0]->parentPage; ?>" name="elm_EditPage_parentPage" size="42" > </td>
+            <td><input type="text" id="elm_EditPage_parentPage" value="<?php echo $page->parentPage; ?>" name="elm_EditPage_parentPage" size="42" > </td>
         </tr>
 
         <tr>
             <td>Keyword:</td>
-            <td><input type="text" id="elm_EditPage_Keyword" value="<?php echo $page[0]->keywords; ?>" name="elm_EditPage_Keyword" size="42" > </td>
+            <td><input type="text" id="elm_EditPage_Keyword" value="<?php echo $page->keywords; ?>" name="elm_EditPage_Keyword" size="42" > </td>
         </tr>
 
         <tr>
             <td>Sortierung:</td>
-            <td><input type="text" id="elm_EditPage_Sorting" value="<?php echo $page[0]->sorting; ?>" name="elm_EditPage_Sorting" size="42" > </td>
+            <td><input type="text" id="elm_EditPage_Sorting" value="<?php echo $page->sorting; ?>" name="elm_EditPage_Sorting" size="42" > </td>
         </tr>
 
         <tr>
             <td>Seiteninhalt:</td>
-            <td><textarea id="elm_EditPage_Content" name="elm_EditPage_Content" rows="10" cols="40"><?php echo $page[0]->content; ?></textarea> </td>
+            <td><textarea id="elm_EditPage_Content" name="elm_EditPage_Content" rows="10" cols="40"><?php echo $page->content; ?></textarea> </td>
         </tr>
 
         <tr>

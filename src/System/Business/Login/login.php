@@ -12,7 +12,7 @@ class elm_LoginFunctionality{
         //Checks if all values are set
         if(isset($userName) && isset($password) && isset($verify)){
             //Executes login functionality
-            $elm_Data->elm_Data_login_User($userName, $password, $verify);
+            $elm_Data->loginUser($userName, $password, $verify);
             //Refreshes page
             header("Location: index.php");
         }
