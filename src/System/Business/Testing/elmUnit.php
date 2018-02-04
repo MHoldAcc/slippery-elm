@@ -20,7 +20,8 @@ class elmUnit_TestExecutor{
      * @return string a HTML construct showing the result of the tests
      */
     public static function executeTests() : string{
-        $returnValue = '<div class="elmUnitTesting">';
+        $returnValue = '';
+        $errorCount = 0;
 
         self::setErrorHandler();
 
@@ -30,9 +31,10 @@ class elmUnit_TestExecutor{
                 $returnValue = $returnValue . '<p class="successful"><b>Test:</b> "' . $test->name . '" was successful!</p>';
             } catch (Exception $ex) {
                 $returnValue = $returnValue . '<p class="failure"><b>Test:</b> "' . $test->name . '" failed. <br>Exception:<br>' . $ex->getMessage() . '</p>';
+                $errorCount++;
             }
         }
-        return $returnValue . '</div>';
+        return '<div class="elmUnitTesting"><h1>Tests executed</h1><p>'. $errorCount .' error(s) occurred</p>' . $returnValue . '</div>';
     }
 
     /**
