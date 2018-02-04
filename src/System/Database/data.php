@@ -24,10 +24,10 @@ class elm_Data {
         include_once("config.php");
         if ($elm_Settings_ConnectionHost == "mysql") {
             include_once "MariaDb/initializeMariaDB.php";
-            initializeMariaDB();
+            initializeMariaDB($this->conn);
         } else if ($elm_Settings_ConnectionHost == "pgsql"){
             include_once "Postgresql/initializePostgresqlDB.php";
-            initializePostgresqlDB();
+            initializePostgresqlDB($this->conn);
         }
     }
 

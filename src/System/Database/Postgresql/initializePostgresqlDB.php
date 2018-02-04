@@ -6,8 +6,7 @@
  * Time: 10:17
  * this function crates the table structure of the database
  */
-function initializePostgresqlDB(){
-    GLOBAL $conn;
+function initializePostgresqlDB($conn){
     $sql = $conn->prepare("CREATE TABLE public.elm_pages (
                                       pagesID SERIAL NOT NULL,
                                       pagesName CHARACTER(255),

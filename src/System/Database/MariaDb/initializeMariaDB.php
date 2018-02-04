@@ -6,8 +6,7 @@
  * Time: 10:17
  * this function crates the table structure of the database
  */
-function initializeMariaDB(){
-    GLOBAL $conn;
+function initializeMariaDB($conn){
     $sql = $conn->prepare("CREATE TABLE `elm_pages` (
               `pagesid` int(11) NOT NULL,
               `pagesname` varchar(255) NOT NULL,
