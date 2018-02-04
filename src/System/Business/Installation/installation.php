@@ -6,9 +6,10 @@ class elm_Installation {
      * @return bool True if db got initialized
      */
     public static function initializeDb() : bool {
+        GLOBAL $elm_Data;
         //Only execute if db wasn't already created
-        if(!elm_Data_GetIsDbInitialized()){
-            elm_Data_InitializeDb();
+        if(!$elm_Data->elm_Data_GetIsDbInitialized()){
+            $elm_Data->elm_Data_InitializeDb();
             return true;
         }
         return false;
@@ -22,6 +23,7 @@ class elm_Installation {
      * @return bool True if creation of the admin user was successful
      */
     public static function createAdminUser(string $username, string $password, string $email) : bool {
+        GLOBAL $elm_Data;
         //Stripslashes from variables so there can't be any sql injections
         $username = stripslashes($username);
         $password = stripslashes($password);
@@ -30,7 +32,7 @@ class elm_Installation {
         //Check if all variables have a value
         if($username != '' && $password != '' &&  $email != ''){
             //Create admin user
-            if(elm_Data_CreateUser($username, $password, $email, elm_Data_GetRoleId('admin')))
+            if($elm_Data->elm_Data_CreateUser($username, $password, $email, $elm_Data->elm_Data_GetRoleId('admin')))
                 return true;
         }
 

@@ -1,5 +1,6 @@
 <?php
-$page = elm_Data_GetSpecificPages($_GET['id']);
+GLOBAL $elm_Data;
+$page = $elm_Data->elm_Data_GetSpecificPages($_GET['id']);
 
 /**
  * Formular for create a page. "save"-Button triggers pageManagement.

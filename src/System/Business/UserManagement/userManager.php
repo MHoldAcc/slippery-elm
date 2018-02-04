@@ -27,8 +27,9 @@ class elm_UserManager {
      * @return bool True if successful
      */
     public static function deleteCurrentUser() : bool {
+        GLOBAL $elm_Data;
         if(isset($_SESSION['login_user_id'])){
-            elm_Data_DeleteUser($_SESSION['login_user_id']);
+            $elm_Data->elm_Data_DeleteUser($_SESSION['login_user_id']);
             elm_LoginFunctionality::executeLogout();
             return true;
         }
@@ -45,7 +46,8 @@ class elm_UserManager {
      * @return bool True if username is unique
      */
     public static function isUsernameUnique(string $username, string $id=null) : bool{
-        $users = elm_Data_GetUsers();
+        GLOBAL $elm_Data;
+        $users = $elm_Data->elm_Data_GetUsers();
 
         foreach($users as $user){
             if ($user['username'] == $username){
@@ -69,8 +71,9 @@ class elm_UserManager {
      * @return bool True if successful
      */
     public static function addUser(string $name, string $password, string $mail, string $roleId) : bool {
+        GLOBAL $elm_Data;
         if (self::isUsernameUnique($name) === true) {
-            if (elm_Data_CreateUser($name, $password, $mail, $roleId)) {
+            if ($elm_Data->elm_Data_CreateUser($name, $password, $mail, $roleId)) {
                 return true;
             } else {
                 return false;
@@ -87,7 +90,8 @@ class elm_UserManager {
      * @return bool True if successful
      */
     public static function deleteUser(string $userId) : bool {
-        elm_Data_DeleteUser($userId);
+        GLOBAL $elm_Data;
+        $elm_Data->elm_Data_DeleteUser($userId);
         return true;
     }
 
@@ -100,8 +104,9 @@ class elm_UserManager {
      * @return bool True if successful
      */
     public static function updateUser($userId, $userName, $password, $mail){
+        GLOBAL $elm_Data;
         if(isset($userName) && isset($password) && isset($mail) && self::isUsernameUnique($userName, $userId)){
-            elm_Data_UpdateUser($userId, $userName, $password, $mail);
+            $elm_Data->elm_Data_UpdateUser($userId, $userName, $password, $mail);
             return true;
         }
         else{

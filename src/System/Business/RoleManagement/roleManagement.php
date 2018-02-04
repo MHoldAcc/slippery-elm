@@ -8,7 +8,8 @@ class elm_RoleManger{
      * @return bool True if unique
      */
     public static function isRoleUnique(string $roleName) : bool {
-        $roles = elm_Data_GetRole();
+        GLOBAL $elm_Data;
+        $roles = $elm_Data->elm_Data_GetRole();
 
         foreach($roles as $role){
             if ($role['rolename'] == $roleName){
@@ -24,10 +25,11 @@ class elm_RoleManger{
      * @return bool True if successful
      */
     public static function deleteRole(string $roleId) : bool {
+        GLOBAL $elm_Data;
         //Allow role deletion only if no users are assigned
-        $assignedRoles = elm_Data_AssignmentRole($roleId);
+        $assignedRoles = $elm_Data->elm_Data_AssignmentRole($roleId);
         if (count($assignedRoles) == 0){
-            elm_Data_DeleteRole($roleId);
+            $elm_Data->elm_Data_DeleteRole($roleId);
             return true;
         }
         else {
@@ -42,9 +44,10 @@ class elm_RoleManger{
      * @return bool True if successful
      */
     public static function addRole(string $name, string $description) : bool {
+        GLOBAL $elm_Data;
         //Validates inputs, if valid -> Store new role
         if (self::isRoleUnique($name) === true) {
-            elm_Data_CreateRole($name, $description);
+            $elm_Data->elm_Data_CreateRole($name, $description);
             return true;
         }
         else {

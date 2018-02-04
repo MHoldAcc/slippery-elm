@@ -8,10 +8,11 @@ class elm_LoginFunctionality{
      * @param $verify The verification of the password to login with
      */
     public static function executeLogin(string $userName, string $password, string $verify){
+        GLOBAL $elm_Data;
         //Checks if all values are set
         if(isset($userName) && isset($password) && isset($verify)){
             //Executes login functionality
-            elm_Data_login_User($userName, $password, $verify);
+            $elm_Data->elm_Data_login_User($userName, $password, $verify);
             //Refreshes page
             header("Location: index.php");
         }

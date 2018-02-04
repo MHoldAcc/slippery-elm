@@ -6,7 +6,7 @@
  * Time: 16:09
  */
 
-class elm_data
+class elm_Data
 {
     /**
      * initialize DB if it isn't initialized yet

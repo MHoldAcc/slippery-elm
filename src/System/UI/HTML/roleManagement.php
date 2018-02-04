@@ -1,6 +1,7 @@
 <?php
+    GLOBAL $elm_Data;
     //load roles form db
-    $roles = elm_Data_GetRole();
+    $roles = $elm_Data->elm_Data_GetRole();
 
 ?>
 <h1>Role Management</h1>
@@ -21,7 +22,7 @@
         //create table row for each user
         foreach($roles as $role){
             //get assignedUsers of role
-            $assignedUsers = elm_Data_AssignmentRole($role['roleid']);
+            $assignedUsers = $elm_Data->elm_Data_AssignmentRole($role['roleid']);
             echo "<tr>".
                     "<td>".$role['rolename']."</td>".
                     "<td>".$role['roledescription'] ."</td>".

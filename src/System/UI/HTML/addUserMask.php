@@ -1,6 +1,7 @@
 <?php
+    GLOBAL $elm_Data;
     //get roles form db
-    $roles = elm_Data_GetRole();
+    $roles = $elm_Data->elm_Data_GetRole();
 ?>
 
 <h1>User hinzufügen</h1>

@@ -1,8 +1,9 @@
 <?php
+GLOBAL $elm_Data;
 /**
  * Loads the pages from the Database
  * */
-$pages = elm_Data_GetPages();
+$pages = $elm_Data->elm_Data_GetPages();
 ?>
 
 <?php

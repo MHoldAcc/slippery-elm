@@ -7,8 +7,11 @@ include_once("System/Business/Objects/objects.php");
 include_once("System/Database/data.php");
 include_once("System/Business/Installation/installation.php");
 
+GLOBAL $elm_Data;
+$elm_Data = new elm_Data();
+
 //Check if installation was already done
-if(!elm_Data_GetIsDbInitialized()){
+if(!$elm_Data->elm_Data_GetIsDbInitialized()){
     if(isset($_GET['install_db'])){
         elm_Installation::doInstallation();
         header("Refresh:0");
@@ -17,7 +20,7 @@ if(!elm_Data_GetIsDbInitialized()){
         include_once("System/UI/HTML/installation.html");
 }
 //If installation was done but no admin user got created yet:
-else if (count(elm_Data_GetUsers()) === 0){
+else if (count($elm_Data->elm_Data_GetUsers()) === 0){
     //If admin data is given in post -> Create admin user
     if(isset($_POST['elm_Post_Username']) && isset($_POST['elm_Post_Password']) && isset($_POST['elm_Post_Email'])){
         elm_Installation::createAdminUser($_POST['elm_Post_Username'], $_POST['elm_Post_Password'], $_POST['elm_Post_Email']);
@@ -29,8 +32,8 @@ else if (count(elm_Data_GetUsers()) === 0){
 //If installation was completed:
 else{
     //Execute Update if needed
-    if($elm_Version_Number != elm_Data_GetCurrentVersion())
-        elm_Data_ExecuteUpdate();
+    if($elm_Version_Number != $elm_Data->elm_Data_GetCurrentVersion())
+        $elm_Data->elm_Data_ExecuteUpdate();
 
     //Includes loading the page and content functionality
     include_once("System/UI/pageLoader.php");
